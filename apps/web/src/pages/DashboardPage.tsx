@@ -1,80 +1,66 @@
-import { Activity, BrainCircuit, ClipboardList, Shield, Swords, Target } from "lucide-react";
-import { SystemStatus } from "../components/SystemStatus";
+import { useConsoleData } from "../hooks/useConsoleData";
+import { AuditLogsPage } from "./AuditLogsPage";
+import { BlueTeamPage } from "./BlueTeamPage";
+import { ClientLlmPage } from "./ClientLlmPage";
+import { OverviewPage } from "./OverviewPage";
+import { RedTeamPage } from "./RedTeamPage";
+import { TestRunsPage } from "./TestRunsPage";
 
-const sections = [
+const TEST_SCENARIOS = [
   {
-    id: "overview",
-    title: "Security Overview",
-    detail: "Monitor platform status, active security tests, and recent security activity.",
-    icon: Target,
-    status: "Operational"
+    id: "prompt-injection",
+    name: "Prompt Injection Test",
+    description: "Check whether the system resists embedded instructions that attempt to alter behavior."
   },
   {
-    id: "red-team",
-    title: "Red Team",
-    detail: "Configure and execute controlled adversarial security tests.",
-    icon: Swords,
-    status: "Ready"
+    id: "instruction-override",
+    name: "Instruction Override Test",
+    description: "Assess whether the model follows higher-priority policy over conflicting user text."
   },
   {
-    id: "blue-team",
-    title: "Blue Team",
-    detail: "Monitor threats, evaluate defensive rules, and review security responses.",
-    icon: Shield,
-    status: "Monitoring"
+    id: "context-manipulation",
+    name: "Context Manipulation Test",
+    description: "Evaluate whether the system can ignore attempts to reshape context boundaries."
   },
   {
-    id: "client-llm",
-    title: "Client LLM",
-    detail: "Manage the model boundary used for controlled AI security evaluation.",
-    icon: BrainCircuit,
-    status: "Protected"
-  },
-  {
-    id: "test-runs",
-    title: "Test Runs",
-    detail: "Review security tests, execution status, findings, and outcomes.",
-    icon: Activity,
-    status: "No test runs yet"
-  },
-  {
-    id: "audit-logs",
-    title: "Audit Logs",
-    detail: "Review security events and trace activity across the testing environment.",
-    icon: ClipboardList,
-    status: "No audit events yet"
+    id: "data-exposure",
+    name: "Data Exposure Test",
+    description: "Detect requests that try to elicit sensitive identifiers or hidden information."
   }
-];
+] as const;
 
-export const DashboardPage = () => (
-  <div className="px-5 py-6 lg:px-8">
-    <div className="mx-auto max-w-7xl space-y-6">
-      <SystemStatus />
+export const DashboardPage = () => {
+  const consoleData = useConsoleData();
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" aria-label="Bayora modules">
-        {sections.map((section) => {
-          const Icon = section.icon;
+  return (
+    <div className="px-5 py-6 lg:px-8">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <OverviewPage overview={consoleData.overview} />
 
-          return (
-            <article
-              key={section.id}
-              id={section.id}
-              className="rounded border border-bayora-border bg-bayora-panel p-5 transition hover:border-slate-500"
-            >
-              <div className="mb-5 flex items-center justify-between gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded border border-slate-700 bg-black/20">
-                  <Icon className="h-5 w-5 text-bayora-signal" aria-hidden="true" />
-                </div>
-                <span className="rounded border border-bayora-border bg-black/15 px-2 py-1 text-xs text-slate-400">
-                  {section.status}
-                </span>
-              </div>
-              <h2 className="text-lg font-semibold text-white">{section.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-slate-400">{section.detail}</p>
-            </article>
-          );
-        })}
-      </section>
+        <RedTeamPage
+          scenarios={TEST_SCENARIOS}
+          selectedTest={consoleData.selectedTest}
+          onCreateTest={async (payload) => {
+            await consoleData.createTest(payload);
+          }}
+          onRunTest={async (testId) => {
+            await consoleData.runTest(testId);
+          }}
+          onSelectTest={(testId) => consoleData.setSelectedTestId(testId)}
+        />
+
+        <BlueTeamPage events={consoleData.securityEvents} rules={consoleData.securityRules} />
+
+        <ClientLlmPage llmStatus={consoleData.llmStatus} />
+
+        <TestRunsPage
+          tests={consoleData.tests}
+          selectedTest={consoleData.selectedTest}
+          onSelectTest={(testId) => consoleData.setSelectedTestId(testId)}
+        />
+
+        <AuditLogsPage logs={consoleData.auditLogs} />
+      </div>
     </div>
-  </div>
-);
+  );
+};

@@ -4,7 +4,7 @@ export interface ApiConfig {
   host: string;
   port: number;
   nodeEnv: "development" | "test" | "production";
-  corsOrigin: string;
+  corsOrigin: string | string[];
 }
 
 const parsePort = (value: string | undefined, fallback: number): number => {
@@ -28,10 +28,20 @@ const parseNodeEnv = (value: string | undefined): ApiConfig["nodeEnv"] => {
   return "development";
 };
 
+const parseCorsOrigin = (value: string | undefined): ApiConfig["corsOrigin"] => {
+  const rawValue = value ?? "http://127.0.0.1:5173,http://127.0.0.1:5174";
+  const origins = rawValue
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  return origins.length <= 1 ? origins[0] ?? rawValue : origins;
+};
+
 export const getApiConfig = (): ApiConfig => ({
   host: process.env.API_HOST ?? "127.0.0.1",
   port: parsePort(process.env.API_PORT, 4000),
   nodeEnv: parseNodeEnv(process.env.NODE_ENV),
-  corsOrigin: process.env.CORS_ORIGIN ?? "http://127.0.0.1:5173"
+  corsOrigin: parseCorsOrigin(process.env.CORS_ORIGIN)
 });
 

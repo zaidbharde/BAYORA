@@ -2,7 +2,12 @@ import cors from "@fastify/cors";
 import Fastify, { type FastifyInstance } from "fastify";
 import type { FastifyError } from "fastify";
 import { getApiConfig } from "./config/env.js";
+import { auditRoutes } from "./routes/audit.js";
 import { healthRoutes } from "./routes/health.js";
+import { llmRoutes } from "./routes/llm.js";
+import { overviewRoutes } from "./routes/overview.js";
+import { securityRoutes } from "./routes/security.js";
+import { testsRoutes } from "./routes/tests.js";
 
 export const buildServer = async (): Promise<FastifyInstance> => {
   const config = getApiConfig();
@@ -29,6 +34,11 @@ export const buildServer = async (): Promise<FastifyInstance> => {
   app.register(
     async (api) => {
       await api.register(healthRoutes);
+      await api.register(overviewRoutes);
+      await api.register(testsRoutes);
+      await api.register(securityRoutes);
+      await api.register(auditRoutes);
+      await api.register(llmRoutes);
     },
     { prefix: "/api" }
   );

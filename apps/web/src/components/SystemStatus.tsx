@@ -10,7 +10,7 @@ export const SystemStatus = () => {
     <section className="rounded border border-bayora-border bg-bayora-panel p-5" aria-label="System status">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <p className="text-sm text-slate-400">System Status</p>
+          <p className="text-sm text-slate-400">API Status</p>
           <div className="mt-1 flex flex-wrap items-center gap-3">
             <h2 className="text-xl font-semibold text-white">{statusText}</h2>
             <span
