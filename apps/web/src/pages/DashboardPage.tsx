@@ -4,39 +4,45 @@ import { SystemStatus } from "../components/SystemStatus";
 const sections = [
   {
     id: "overview",
-    title: "Overview",
-    detail: "High-level posture, active simulations, and system readiness will appear here.",
-    icon: Target
+    title: "Security Overview",
+    detail: "Monitor platform status, active security tests, and recent security activity.",
+    icon: Target,
+    status: "Operational"
   },
   {
     id: "red-team",
     title: "Red Team",
-    detail: "Adversarial test planning and simulated attack workflows will be added in later phases.",
-    icon: Swords
+    detail: "Configure and execute controlled adversarial security tests.",
+    icon: Swords,
+    status: "Ready"
   },
   {
     id: "blue-team",
     title: "Blue Team",
-    detail: "Detection rules, response actions, and defensive status will be modeled here.",
-    icon: Shield
+    detail: "Monitor threats, evaluate defensive rules, and review security responses.",
+    icon: Shield,
+    status: "Monitoring"
   },
   {
     id: "client-llm",
     title: "Client LLM",
-    detail: "The mock model boundary is reserved for future local or cloud LLM adapters.",
-    icon: BrainCircuit
+    detail: "Manage the model boundary used for controlled AI security evaluation.",
+    icon: BrainCircuit,
+    status: "Protected"
   },
   {
     id: "test-runs",
     title: "Test Runs",
-    detail: "Run history, status, and scenario outcomes will be tracked through API contracts.",
-    icon: Activity
+    detail: "Review security tests, execution status, findings, and outcomes.",
+    icon: Activity,
+    status: "No test runs yet"
   },
   {
     id: "audit-logs",
     title: "Audit Logs",
-    detail: "Audit trail entries will remain separated from UI logic for later hardening.",
-    icon: ClipboardList
+    detail: "Review security events and trace activity across the testing environment.",
+    icon: ClipboardList,
+    status: "No audit events yet"
   }
 ];
 
@@ -59,8 +65,8 @@ export const DashboardPage = () => (
                 <div className="flex h-10 w-10 items-center justify-center rounded border border-slate-700 bg-black/20">
                   <Icon className="h-5 w-5 text-bayora-signal" aria-hidden="true" />
                 </div>
-                <span className="rounded border border-bayora-border px-2 py-1 text-xs uppercase text-slate-500">
-                  Placeholder
+                <span className="rounded border border-bayora-border bg-black/15 px-2 py-1 text-xs text-slate-400">
+                  {section.status}
                 </span>
               </div>
               <h2 className="text-lg font-semibold text-white">{section.title}</h2>
@@ -72,4 +78,3 @@ export const DashboardPage = () => (
     </div>
   </div>
 );
-

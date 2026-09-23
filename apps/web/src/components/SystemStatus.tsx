@@ -4,13 +4,26 @@ import { useSystemHealth } from "../hooks/useSystemHealth";
 export const SystemStatus = () => {
   const health = useSystemHealth();
   const isOnline = health.status === "online";
+  const statusText = isOnline ? "Operational" : health.status === "checking" ? "Checking" : "Service Unavailable";
 
   return (
     <section className="rounded border border-bayora-border bg-bayora-panel p-5" aria-label="System status">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-sm text-slate-400">System Status</p>
-          <h2 className="mt-1 text-xl font-semibold text-white">{health.message}</h2>
+          <div className="mt-1 flex flex-wrap items-center gap-3">
+            <h2 className="text-xl font-semibold text-white">{statusText}</h2>
+            <span
+              className={`inline-flex items-center gap-2 rounded border px-2.5 py-1 text-xs uppercase tracking-wide ${
+                isOnline
+                  ? "border-bayora-signal/30 bg-bayora-signal/10 text-bayora-signal"
+                  : "border-bayora-alert/30 bg-bayora-alert/10 text-bayora-alert"
+              }`}
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${isOnline ? "bg-bayora-signal" : "bg-bayora-alert"}`} />
+              API {isOnline ? "online" : health.status}
+            </span>
+          </div>
         </div>
         <div
           className={`flex h-11 w-11 items-center justify-center rounded border ${
@@ -29,14 +42,13 @@ export const SystemStatus = () => {
         </div>
         <div className="rounded border border-bayora-border bg-black/15 p-3">
           <p className="text-slate-500">Mode</p>
-          <p className="mt-1 font-medium text-slate-100">Phase 1.1 Simulation</p>
+          <p className="mt-1 font-medium text-slate-100">Security Operations</p>
         </div>
         <div className="rounded border border-bayora-border bg-black/15 p-3">
           <p className="text-slate-500">Live Events</p>
-          <p className="mt-1 font-medium text-slate-100">REST ready</p>
+          <p className="mt-1 font-medium text-slate-100">Ready</p>
         </div>
       </div>
     </section>
   );
 };
-
