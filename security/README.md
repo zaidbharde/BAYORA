@@ -1,0 +1,7 @@
+# Container hardening
+
+The Docker Compose base applies non-root UID 10001, read-only root filesystems, `cap_drop: ALL`, `no-new-privileges`, own container namespaces, capped `/tmp` tmpfs, PID/CPU/memory/file-descriptor limits, and a custom seccomp policy. Blue uses a default-deny syscall allowlist in `seccomp/blue.json`; other services use `seccomp/tenant.json`, which explicitly denies namespace, mount, ptrace, kernel-module, keyring, BPF, perf, and reboot operations. There are no Docker socket mounts; tenant data is delivered into tmpfs by the trusted host coordinator. Red and Blue share neither a bind mount nor a writable volume.
+
+The active sandbox Docker daemon initially ran rootful (`docker info` security options did not include rootless or userns-remap), and no `dockerd-rootless.sh` helper was present. This is an execution-environment limitation, not a tested rootless guarantee. `unshare -Ur` succeeded and `/etc/subuid` is configured, so Phase 8 will attempt daemon-level UID remapping using a separate Docker data root. If the remapped daemon or any service cannot start, preserve the actual result and roll back to the original daemon without claiming remapping success. AppArmor remains Docker's default; gVisor/Kata is not installed. No custom AppArmor profile or image vulnerability scan is claimed.
+
+`seccomp/blue.json` is hand-curated, not yet derived from a recorded `strace -c` run; this remains a gap against the Master Prompt. Validate it against Blue's health and request paths whenever updated.

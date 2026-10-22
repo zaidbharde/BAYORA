@@ -1,0 +1,15 @@
+sequenceDiagram
+  participant R as Red
+  participant G as Gateway
+  participant B as Blue
+  participant L as LLM
+  participant A as Audit
+  R->>G: attack prompt + token
+  G->>A: request hash
+  G->>B: opaque request
+  B-->>G: ALLOW/BLOCK/SANITIZE
+  G->>L: isolated session prompt
+  L-->>G: completion
+  G->>B: output check
+  G->>A: verdict + response hash
+  G-->>R: normalized padded reply

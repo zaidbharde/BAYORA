@@ -1,0 +1,8 @@
+flowchart LR
+  R[Red] -->|allowed: Gateway only| G[Gateway]
+  G -->|allowed: enum verdict| B[Blue]
+  G -->|allowed: session prompt| L[LLM]
+  G -->|allowed: hashes| A[Audit]
+  R -. blocked route .-> B
+  R -. blocked route .-> L
+  X[Residual: shared host timing] -. measured, not removed .-> G

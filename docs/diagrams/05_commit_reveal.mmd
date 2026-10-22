@@ -1,0 +1,11 @@
+sequenceDiagram
+  participant O as Operator
+  participant R as Red
+  participant B as Blue
+  participant E as Evaluator
+  O->>R: commit encrypted payload root
+  R-->>O: signed commitment
+  O->>R: run after commit
+  O->>B: reveal after seal
+  O->>E: release evidence after seal
+  E-->>O: aggregate report

@@ -1,0 +1,10 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements-gateway.txt /app/requirements-gateway.txt
+RUN pip install --no-cache-dir --disable-pip-version-check -r /app/requirements-gateway.txt
+COPY gateway/app.py /app/gateway/app.py
+COPY gateway/request_guard.py /app/gateway/request_guard.py
+RUN touch /app/gateway/__init__.py
+USER 10001:10001
+EXPOSE 8080
+CMD ["uvicorn", "gateway.app:app", "--host", "0.0.0.0", "--port", "8080", "--no-access-log"]

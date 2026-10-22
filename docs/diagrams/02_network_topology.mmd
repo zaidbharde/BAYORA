@@ -1,0 +1,22 @@
+flowchart TB
+  subgraph red_net[red_net internal]
+    R[Red]
+    G1[Gateway]
+  end
+  subgraph blue_net[blue_net internal]
+    B[Blue]
+    G2[Gateway]
+  end
+  subgraph model_net[model_net internal]
+    L[LLM]
+    G3[Gateway]
+  end
+  subgraph audit_net[audit_net internal]
+    A[Audit]
+    G4[Gateway]
+  end
+  subgraph control_net[control_net internal]
+    O[Orchestrator]
+    S[Secrets]
+    D[Dashboard]
+  end

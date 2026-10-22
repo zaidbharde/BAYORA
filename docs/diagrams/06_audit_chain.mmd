@@ -1,0 +1,5 @@
+flowchart LR
+  P[Audit entry n-1] -->|prev_hash| Q[Audit entry n]
+  Q -->|prev_hash| T[Audit entry n+1]
+  Q --> C[Signed Merkle checkpoint]
+  C --> X[Exported evidence]

@@ -1,0 +1,14 @@
+{
+  "modes": [
+    "A",
+    "B",
+    "C"
+  ],
+  "run_ids": [
+    "phase12-a-516de02fb0bb",
+    "phase12-b-16914fd86651",
+    "phase12-c-67a0a1c9ad75"
+  ],
+  "sample_count": 1,
+  "seed": 42
+}

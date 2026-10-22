@@ -1,0 +1,8 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements-audit.txt /app/requirements-audit.txt
+RUN pip install --no-cache-dir --disable-pip-version-check -r /app/requirements-audit.txt
+COPY audit_service/server.py /app/audit_service/server.py
+USER 10001:10001
+EXPOSE 8081
+CMD ["python", "/app/audit_service/server.py"]

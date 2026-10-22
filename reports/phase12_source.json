@@ -1,0 +1,20 @@
+{
+  "benign_rows": 100,
+  "dataset": "JailbreakBench/JBB-Behaviors",
+  "doi": "10.57967/hf/2540",
+  "encrypted_bundle_sha256": {
+    "phase12_blue_reveal.age": "8ab31ef836da51d6592e9e97b9f265e5c20f1bcc0f99851b58d41d3ee4323129",
+    "phase12_judge_train.age": "e47c1faabc20876b71c4ce9ca903cdcbda889197d0887c0f0d261e81f01fb44a",
+    "phase12_red_inputs.age": "7e24a751535543ddb9fe1c9f456f95a570b5346ebf5eb28ae5f38b3746d97e53"
+  },
+  "harmful_rows": 100,
+  "judge_comparison_rows": 300,
+  "license": "MIT",
+  "revision": "886acc352a31533ffbcf4ef22c744658688086fc",
+  "seed": 42,
+  "source_sha256": {
+    "benign-behaviors.csv": "3cda234d21a991fa309bbfea4b6d9dae31ccdf8e9d452424b6a983e4fdc33468",
+    "harmful-behaviors.csv": "4a8ec6832056b631eb092dccc60d37a61c3d441268268888b3d006288afeffa1",
+    "judge-comparison.csv": "dacaf76a1057785f11b0fc6aa07b9a73cdab588319ddfc5e8cef2909e5b112a5"
+  }
+}

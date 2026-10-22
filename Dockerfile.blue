@@ -1,0 +1,10 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements-blue.txt /app/requirements-blue.txt
+RUN pip install --no-cache-dir --disable-pip-version-check -r /app/requirements-blue.txt
+COPY blue_engine/app.py /app/blue_engine/app.py
+COPY blue_engine/canaries.json /app/blue_engine/canaries.json
+RUN touch /app/blue_engine/__init__.py
+USER 10001:10001
+EXPOSE 8082
+CMD ["uvicorn", "blue_engine.app:app", "--host", "0.0.0.0", "--port", "8082", "--no-access-log"]

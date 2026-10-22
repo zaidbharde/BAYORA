@@ -1,0 +1,9 @@
+# Monitoring and violation handling
+
+BAYORA records Gateway boundary violations as signed `POLICY_VIOLATION` Audit entries. The event contains a fixed violation code, fixed route class, status code, and an integrity state; it never stores a request body, token, prompt, response, or arbitrary URL. A valid signed run token associates the event with that run and marks it `integrity-compromised`; requests without a valid token are recorded under `gateway-unattributed` and do not name a run.
+
+The Audit service exposes a read-only Prometheus endpoint that derives counters from the signed log. It exports only allowlisted violation categories, distinct compromised-run count, and total signed-entry count. Prometheus uses a fixed five-second scrape/evaluation interval and evaluates repeated-violation and integrity alerts. The dashboard displays aggregate counts and alert names only. Prometheus and the dashboard are attached only to `control_net`; the dashboard host binding is loopback-only. Red and Blue have no route to the control network or Audit exporter. The pull scrape is deliberately one-way; no telemetry path returns to tenant networks.
+
+Gateway requests are bounded to 64 KiB and 20 requests per source per rolling minute. Early `/attack` rejections use the same response-time bucket. Validation details are replaced by a generic rejection response. If a signed violation cannot be recorded, the Gateway fails closed with a generic service-unavailable response.
+
+**Scope limitation:** T18 verifies request-level violations, rate-limit alerts, signed Audit integrity, coarse metrics, and network separation. Host Docker-event monitoring, auditd/Falco rules, and per-cgroup metric exporters are not implemented in this sandbox; no claim is made that those host-level signals are monitored.

@@ -1,0 +1,13 @@
+flowchart LR
+  O[Operator / control_net] --> OR[Orchestrator]
+  OR --> G[Gateway]
+  R[Red Engine / red_net] -->|attack + token| G
+  G -->|enum verdict| B[Blue Engine / blue_net]
+  G -->|session prompt| L[Client LLM / model_net]
+  G -->|hash-only events| A[Audit / audit_net]
+  OR --> S[Secrets Store / control_net]
+  style R fill:#fee2e2,stroke:#b91c1c
+  style B fill:#dbeafe,stroke:#1d4ed8
+  style L fill:#ede9fe,stroke:#6d28d9
+  style G fill:#dcfce7,stroke:#15803d
+  style A fill:#fef3c7,stroke:#b45309

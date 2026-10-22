@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+*.agekey
+*_private.pem
+*_private.key
+
+# Model weights and locally generated Ollama signing keys are private/local.
+models/ollama/
+
+# Local development credentials; never commit.
+secrets/
+
+# Append-only runtime audit outputs.
+data/audit/
+
+# Runtime and test-only classifier artifacts.
+models/blue_classifier/

@@ -1,0 +1,72 @@
+flowchart TB
+  subgraph Zones
+    R[Red] --- G[Gateway]
+    G --- B[Blue]
+    G --- L[LLM]
+    G --- A[Audit]
+  end
+  R -. blocked .- B
+  R -. blocked .- L
+  B -. blocked .- L
+
+sequenceDiagram
+  participant R as Red
+  participant G as Gateway
+  participant B as Blue
+  participant L as LLM
+  participant A as Audit
+  R->>G: attack prompt + token
+  G->>A: request hash
+  G->>B: opaque request
+  B-->>G: ALLOW/BLOCK/SANITIZE
+  G->>L: isolated session prompt
+  L-->>G: completion
+  G->>B: output check
+  G->>A: verdict + response hash
+  G-->>R: normalized padded reply
+
+stateDiagram-v2
+  [*] --> CREATED
+  CREATED --> PROVISIONED
+  PROVISIONED --> COMMITTED
+  COMMITTED --> RUNNING
+  RUNNING --> SEALED
+  SEALED --> REVEALED
+  REVEALED --> EVALUATED
+  EVALUATED --> DESTROYED
+  RUNNING --> DESTROYED: failure / cleanup
+
+sequenceDiagram
+  participant O as Operator
+  participant R as Red
+  participant B as Blue
+  participant E as Evaluator
+  O->>R: commit encrypted payload root
+  R-->>O: signed commitment
+  O->>R: run after commit
+  O->>B: reveal after seal
+  O->>E: release evidence after seal
+  E-->>O: aggregate report
+
+flowchart LR
+  P[Audit entry n-1] -->|prev_hash| Q[Audit entry n]
+  Q -->|prev_hash| T[Audit entry n+1]
+  Q --> C[Signed Merkle checkpoint]
+  C --> X[Exported evidence]
+
+flowchart TD
+  E1[Container escape] --> T05[T05/T06/T07/T17]
+  E2[Network movement] --> T01[T01-T04]
+  E3[Secret leakage] --> T08[T08-T10]
+  E4[Timing interference] --> T11[T11/T14]
+  E5[LLM contamination] --> T09[T09/T12/T13/T16]
+  E6[Audit tamper] --> T15[T15]
+
+flowchart LR
+  R[Red] -->|allowed: Gateway only| G[Gateway]
+  G -->|allowed: enum verdict| B[Blue]
+  G -->|allowed: session prompt| L[LLM]
+  G -->|allowed: hashes| A[Audit]
+  R -. blocked route .-> B
+  R -. blocked route .-> L
+  X[Residual: shared host timing] -. measured, not removed .-> G

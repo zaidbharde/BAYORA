@@ -1,0 +1,17 @@
+groups:
+  - name: bayora-policy
+    rules:
+      - alert: RepeatedGatewayPolicyViolations
+        expr: sum(increase(bayora_policy_violations_total[5m])) >= 3
+        for: 0s
+        labels:
+          severity: warning
+        annotations:
+          summary: Repeated Gateway policy violations detected
+      - alert: IntegrityCompromisedRun
+        expr: bayora_integrity_compromised_runs_total > 0
+        for: 0s
+        labels:
+          severity: critical
+        annotations:
+          summary: A run requires integrity review
