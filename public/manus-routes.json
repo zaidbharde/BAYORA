@@ -1,0 +1,1 @@
+{"routes":[{"path":"/","title":"Overview"},{"path":"/security","title":"Security Lab"},{"path":"/observability","title":"AI Observability"},{"path":"/findings","title":"Findings"},{"path":"/evaluations","title":"Evaluations"},{"path":"/audit","title":"Audit & Evidence"},{"path":"/environment","title":"Environment"}]}
