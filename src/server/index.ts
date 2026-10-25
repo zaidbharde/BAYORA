@@ -1,5 +1,6 @@
 import express from "express";
 import path from "node:path";
+import { createServer as createHttpServer, type Server as HttpServer } from "node:http";
 import { loadEnvFile } from "node:process";
 import { fileURLToPath } from "node:url";
 import { createApiRouter } from "./api.js";
@@ -12,7 +13,7 @@ try {
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
-export async function createApplication() {
+export async function createApplication(hmrServer?: HttpServer) {
   const app = express();
   app.disable("x-powered-by");
   app.use((_request, response, next) => {
@@ -38,12 +39,17 @@ export async function createApplication() {
       });
     });
   } else {
-    const { createServer } = await import("vite");
-    const vite = await createServer({
+    const { createServer: createViteServer } = await import("vite");
+    const vite = await createViteServer({
       configFile: path.join(projectRoot, "vite.config.ts"),
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        // Share the Preview-facing HTTP listener; Vite's standalone fallback port is not proxied.
+        hmr: hmrServer ? { server: hmrServer } : false,
+      },
       appType: "spa",
     });
+    app.locals.closeViteServer = () => vite.close();
     app.use(vite.middlewares);
     app.use((error: unknown, _request: express.Request, response: express.Response, _next: express.NextFunction) => {
       vite.ssrFixStacktrace(error as Error);
@@ -55,12 +61,37 @@ export async function createApplication() {
 }
 
 async function start() {
-  const app = await createApplication();
+  const httpServer = createHttpServer();
+  const app = await createApplication(httpServer);
+  httpServer.on("request", app);
   const port = Number(process.env.PORT || 3000);
-  const server = app.listen(port, "0.0.0.0", () => {
+  httpServer.listen(port, "0.0.0.0", () => {
     console.log(`BAYORA prototype listening on 0.0.0.0:${port}`);
   });
-  const shutdown = () => server.close(() => process.exit(0));
+
+  let shuttingDown = false;
+  const shutdown = () => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    const closeVite = app.locals.closeViteServer as (() => Promise<void>) | undefined;
+    void (async () => {
+      try {
+        await closeVite?.();
+      } catch (error) {
+        console.error("Failed to close the Vite development server cleanly.", error);
+        process.exitCode = 1;
+      } finally {
+        if (httpServer.listening) {
+          httpServer.close((error) => {
+            if (error) {
+              console.error("Failed to close the BAYORA HTTP server cleanly.", error);
+              process.exitCode = 1;
+            }
+          });
+        }
+      }
+    })();
+  };
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);
 }

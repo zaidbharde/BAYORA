@@ -7,15 +7,21 @@ Commands executed from `/home/ubuntu/bayora`:
 | Command/check | Result |
 | --- | --- |
 | `pnpm install --frozen-lockfile` | PASS; dependency tree matched the lockfile |
-| `pnpm typecheck` | PASS after the review fixes; `tsc --noEmit` |
-| `pnpm lint` | PASS after the review fixes; `eslint .` |
-| `pnpm test` | PASS after the review fixes; 19 tests, 19 passed, 0 failed |
-| `pnpm build` | PASS after the review fixes; Vite built `dist/client` (React/TypeScript bundle and local fonts) |
+| `pnpm typecheck` | PASS after the HMR change; `tsc --noEmit` |
+| `pnpm lint` | PASS after the HMR change; `eslint .` |
+| `pnpm test` | PASS after the HMR change; 19 tests, 19 passed, 0 failed |
+| `pnpm build` | PASS after the HMR change; Vite built `dist/client` (React/TypeScript bundle and local fonts) |
 | `pnpm preflight` | PASS; Node 22.23.4, pinned pnpm 11.25.0, lockfile and all 7 source routes match `public/manus-routes.json`; no credential-like literal in `.env.example` |
 | Live HTTP smoke on configured port 3000 | PASS; `/api/health` returned the BAYORA synthetic-only mode, `/api/phoenix/status` correctly returned `not_configured`/`health-only`, and `/manus-routes.json` returned all 7 pages. Earlier static smoke confirmed `/`, `/security` and `/bayora-mark.svg` return `200`. |
+| Vite HMR through public Preview | PASS; after reload the Vite client URL at the Preview origin completed the `vite-hmr` subprotocol handshake and received Vite's `connected` message. The normal page reload rendered Overview and the browser console had no errors. |
+| Listener inspection after dev-server reload | PASS; Node listened on `0.0.0.0:3000` only, with no separate Vite listener on port `24678`. |
 | Phoenix archive verification | PASS; all 8,447 tracked files from `phoenix-main.zip` match the official checkout byte-for-byte; 0 missing, 0 extra, 0 mismatches |
 
-Regression coverage includes deep validation of nested stored findings/steps, unknown scenario rejection, preservation of malformed browser data without overwriting it, unavailable localStorage handling, non-followed Phoenix redirects, request-timeout cancellation and invalid Phoenix URL classification. A read-only review found these issues; fixes were followed by typecheck, lint, all 19 tests, production build, preflight and live API checks.
+### HMR diagnosis and repair
+
+The reported error came from Vite middleware mode starting a standalone HMR WebSocket on port `24678` while BAYORA's Express server listened on the configured Preview port `3000`; Preview could not reach that separate port. The server now creates one Node HTTP server first and passes it into Vite's `server.hmr.server` option. API-only `createApplication()` calls disable HMR when no HTTP server is supplied. Shutdown closes the Vite dev server before closing the HTTP server so an active WebSocket does not stall a restart. After the change, the configured listener remained healthy and an authenticated Vite websocket handshake from the actual Preview origin received the expected `connected` message.
+
+Other regression coverage includes deep validation of nested stored findings/steps, unknown scenario rejection, preservation of malformed browser data without overwriting it, unavailable localStorage handling, non-followed Phoenix redirects, request-timeout cancellation and invalid Phoenix URL classification. A read-only review found these issues; fixes were followed by typecheck, lint, all 19 tests, production build, preflight and live API checks.
 
 The first dev-server attempt failed because Node `--env-file-if-exists=.env` with `--watch` attempted to watch a nonexistent file. The implementation was changed to load `.env` safely in-process and use the `tsx` watcher. A clean no-`.env` restart and the live HTTP checks then passed.
 
@@ -43,4 +49,4 @@ These are source tests only; they do not validate BAYORA-to-Phoenix data APIs. N
 
 ## Not verified by this checkpoint
 
-No owner-machine test, identity-provider flow, protected trace/dataset/evaluation API, cross-user or shared persistence, database migration, cryptographic evidence signing, protected review workflow, effective isolation test, visual device/browser acceptance, or public deployment was performed. These remain blocked or owner review items; no production-readiness claim is made.
+No owner-machine test, identity-provider flow, protected trace/dataset/evaluation API, cross-user or shared persistence, database migration, cryptographic evidence signing, protected review workflow, effective isolation test, or public deployment was performed. These remain blocked or owner review items; no production-readiness claim is made.
