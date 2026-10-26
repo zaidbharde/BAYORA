@@ -1,5 +1,7 @@
 import type { ScenarioDefinition, SyntheticRun, SyntheticStep } from "./types.js";
 
+export type SyntheticRunMode = SyntheticRun["mode"];
+
 export const scenarios: readonly ScenarioDefinition[] = [
   {
     id: "prompt-injection-fixture",
@@ -51,7 +53,7 @@ function step(id: string, title: string, expected: string, observed: string): Sy
 
 export function runSyntheticScenario(
   scenarioId: string,
-  options: { runId?: string; now?: Date } = {},
+  options: { runId?: string; now?: Date; mode?: SyntheticRunMode } = {},
 ): SyntheticRun {
   const scenario = scenarios.find((item) => item.id === scenarioId);
   if (!scenario) throw new Error(`Unsupported synthetic scenario: ${scenarioId}`);
@@ -59,6 +61,7 @@ export function runSyntheticScenario(
   const now = options.now ?? new Date();
   const timestamp = now.toISOString();
   const runId = options.runId ?? globalThis.crypto.randomUUID();
+  const mode = options.mode ?? "synthetic-local";
   let steps: SyntheticStep[];
 
   switch (scenario.id) {
@@ -95,7 +98,7 @@ export function runSyntheticScenario(
     scenarioVersion: scenario.version,
     startedAt: timestamp,
     completedAt: timestamp,
-    mode: "synthetic-local",
+    mode,
     outcome: passed ? "PASS" : "FAIL",
     summary: passed
       ? "The built-in synthetic fixture matched its expected local policy behavior."
@@ -116,17 +119,22 @@ export function runSyntheticScenario(
             detail: "This is a local fixture mismatch, not a finding about a model or deployed control.",
           },
         ],
-    evidenceReferences: [`browser-local://bayora/runs/${runId}`],
+    evidenceReferences: [`${mode === "synthetic-server" ? "sqlite" : "browser-local"}://bayora/runs/${runId}`],
     integrityStatus: "UNSIGNED_UNVERIFIED",
     humanReviewStatus: "NOT_REVIEWED",
     acceptanceStatus: "NOT_EVALUATED",
   };
 }
 
-export function runSyntheticSuite(now = new Date()): SyntheticRun[] {
+export function runSyntheticSuite(
+  now = new Date(),
+  options: { mode?: SyntheticRunMode; createRunId?: () => string } = {},
+): SyntheticRun[] {
   return scenarios.map((scenario, index) =>
     runSyntheticScenario(scenario.id, {
       now: new Date(now.getTime() + index),
+      mode: options.mode,
+      runId: options.createRunId?.(),
     }),
   );
 }

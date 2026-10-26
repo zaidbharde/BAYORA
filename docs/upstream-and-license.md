@@ -10,9 +10,10 @@ The upstream tree identifies its license as **Elastic License 2.0 (ELv2)** and c
 
 The verified `LICENSE` says the grant to use, copy, distribute, make available and prepare derivative works is subject to its limitations. In particular, a recipient may not provide the software to third parties as a hosted or managed service where that service gives access to a substantial set of Phoenix features/functionality; may not move, change, disable or circumvent license-key functionality or remove/obscure license-protected features; and may not alter, remove or obscure licensor licensing, copyright or other notices. Anyone who receives any part of the software must also receive these terms, and modified copies need prominent modification notices. The license also includes patent, termination and warranty terms. The source `IP_NOTICE` identifies Arize AI, Inc. and named US patents.
 
-BAYORA is a separate integration client, not a hosted Phoenix service. The project remains unpublished during this work, and Phoenix itself is not deployed by BAYORA. Any later redistribution or hosting change requires a fresh review of the complete upstream license and deployment model. This document is a record of the inspected conditions, not legal advice.
+BAYORA is a separate integration client, not a hosted Phoenix service. At the owner's request its original source is being published to `zaidbharde/BAYORA`; no Phoenix application code, database, or runtime is included or deployed. Public source distribution of original BAYORA code is distinct from hosting Phoenix or offering substantial Phoenix functionality as a managed service. Any later redistribution of Phoenix-derived code or Phoenix hosting change requires a fresh review of the complete upstream license and deployment model. This document is a record of inspected conditions, not legal advice.
 
 ## Direct runtime components bundled by BAYORA
+
 
 | Component | Pinned version | Declared license | Use |
 | --- | ---: | --- | --- |

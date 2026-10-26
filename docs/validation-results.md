@@ -1,52 +1,58 @@
-# Validation evidence — initial owner-testing checkpoint
+# Validation evidence — backend audit and owner-testing checkpoint
 
-## BAYORA application
+Validation was performed in the Manus Sandbox from `/home/ubuntu/bayora` on Node.js 22.23.4 / pnpm 11.25.0. A successful local build or Preview is not a public deployment or production-readiness claim.
 
-Commands executed from `/home/ubuntu/bayora`:
+## BAYORA automated checks
 
 | Command/check | Result |
 | --- | --- |
-| `pnpm install --frozen-lockfile` | PASS; dependency tree matched the lockfile |
-| `pnpm typecheck` | PASS after the HMR change; `tsc --noEmit` |
-| `pnpm lint` | PASS after the HMR change; `eslint .` |
-| `pnpm test` | PASS after the HMR change; 19 tests, 19 passed, 0 failed |
-| `pnpm build` | PASS after the HMR change; Vite built `dist/client` (React/TypeScript bundle and local fonts) |
-| `pnpm preflight` | PASS; Node 22.23.4, pinned pnpm 11.25.0, lockfile and all 7 source routes match `public/manus-routes.json`; no credential-like literal in `.env.example` |
-| Live HTTP smoke on configured port 3000 | PASS; `/api/health` returned the BAYORA synthetic-only mode, `/api/phoenix/status` correctly returned `not_configured`/`health-only`, and `/manus-routes.json` returned all 7 pages. Earlier static smoke confirmed `/`, `/security` and `/bayora-mark.svg` return `200`. |
-| Vite HMR through public Preview | PASS; after reload the Vite client URL at the Preview origin completed the `vite-hmr` subprotocol handshake and received Vite's `connected` message. The normal page reload rendered Overview and the browser console had no errors. |
-| Listener inspection after dev-server reload | PASS; Node listened on `0.0.0.0:3000` only, with no separate Vite listener on port `24678`. |
-| Phoenix archive verification | PASS; all 8,447 tracked files from `phoenix-main.zip` match the official checkout byte-for-byte; 0 missing, 0 extra, 0 mismatches |
+| `pnpm install --frozen-lockfile` | PASS; installed lockfile was up to date. |
+| `pnpm preflight` | PASS; Node 22.23.4, built-in `node:sqlite` memory DB query, pinned pnpm 11.25.0, lockfile, all seven page routes and credential-free `.env.example` verified. No cleanup or deletion performed. |
+| `pnpm typecheck` | PASS; `tsc --noEmit`. |
+| `pnpm lint` | PASS; `eslint .`. |
+| `pnpm test` | PASS; 41 tests, 41 passed, 0 failed, 0 cancelled, 0 skipped, 0 todo. Coverage includes Phoenix health-adapter bounds/failures, Express health/run/suite/list/get contracts, invalid/malformed/oversized input and rejection of JSON plus text/plain suite bodies, Phoenix blocked/no-forwarding, rate limits, SQLite schema/reopen/capacity/atomic rollback, browser-store corruption/non-overwrite, fixed synthetic fixture semantics, and server-rendered Audit/Findings loading/empty/error/truncated states. |
+| `pnpm build` | PASS; checks client/server TypeScript, emits `dist/server/server/index.js`, builds `dist/client` and bundled local fonts with Vite 7.3.7. |
+| `pnpm production-smoke` | PASS; launched the compiled server on an isolated port with a fresh temporary SQLite file, verified production client HTML, live SQLite schema health and one server-created synthetic record, then sent SIGTERM and removed only its temporary test directory. |
+| `git diff --check` | To be repeated on the final staged change before commit. |
 
-### HMR diagnosis and repair
+Node 22 prints `ExperimentalWarning: SQLite is an experimental feature` when BAYORA loads the built-in module. This warning is visible and documented; it does not invalidate the passed tests, but the SQLite module stability should be reassessed before upgrading Node or selecting a production runtime.
 
-The reported error came from Vite middleware mode starting a standalone HMR WebSocket on port `24678` while BAYORA's Express server listened on the configured Preview port `3000`; Preview could not reach that separate port. The server now creates one Node HTTP server first and passes it into Vite's `server.hmr.server` option. API-only `createApplication()` calls disable HMR when no HTTP server is supplied. Shutdown closes the Vite dev server before closing the HTTP server so an active WebSocket does not stall a restart. After the change, the configured listener remained healthy and an authenticated Vite websocket handshake from the actual Preview origin received the expected `connected` message.
+## Live Webdev Preview and browser flow
 
-Other regression coverage includes deep validation of nested stored findings/steps, unknown scenario rejection, preservation of malformed browser data without overwriting it, unavailable localStorage handling, non-followed Phoenix redirects, request-timeout cancellation and invalid Phoenix URL classification. A read-only review found these issues; fixes were followed by typecheck, lint, all 19 tests, production build, preflight and live API checks.
+The current Preview server listened on `0.0.0.0:3000`. The final `GET /api/health` returned `status: ok`, `service: bayora`, `mode: synthetic-only`, SQLite `state: ready`, `count: 4`, `maxRecords: 5000`, `schemaVersion: 1`, and `protectedPhoenixData: blocked`. `GET /manus-routes.json` returned HTTP 200 and the exact seven source routes.
 
-The first dev-server attempt failed because Node `--env-file-if-exists=.env` with `--watch` attempted to watch a nonexistent file. The implementation was changed to load `.env` safely in-process and use the `tsx` watcher. A clean no-`.env` restart and the live HTTP checks then passed.
+Through the actual Preview browser, the Overview rendered from the server API. Clicking **Run synthetic suite** created three records; `GET /api/runs?limit=10` returned source `bayora-sqlite-synthetic`, mode `synthetic-server` for all records, three `PASS` fixture outcomes and total `3`. Navigating to Security Lab and running one individual fixture created a fourth server record. The Audit page showed total `4`, SQLite synthetic provenance with unsigned, unreviewed and unevaluated labels; Findings showed a complete empty result for that same successful history load. Environment showed SQLite ready and identity/Phoenix-data blocked. The browser console had no runtime, API, React or Vite error after these workflows.
 
-## Phoenix upstream baseline
+Preview testing used the isolated path `/tmp/bayora-preview-owner.sqlite`; its four synthetic test records are not project files and are not the default `data/bayora.sqlite`. Eight repeatable `node:test` component tests render Audit/Findings loading, complete-empty, error, and truncated states, including a truncated response with no rows. Those component tests are server-rendered markup checks, not browser interaction tests. The browser navigated to Overview, Audit and Findings; not every route/workflow was manually traversed, and responsive/mobile owner visual review was not performed.
 
-The official checkout is commit `f74341ff0f7f806bc474b37e8ce9e684bab3a0f1`.
+## Vite Preview WebSocket defect
 
-**Targeted upstream test — PASS:** the exact identifier test file completed with 64 passed and 2 warnings in 0.33 seconds:
+The original reported Vite error was reproduced from the Preview context. Vite middleware mode had opened HMR on an unproxied fallback port `24678`, while the Preview server listened on configured port `3000`. The server was changed to pass its existing Node HTTP server as the Vite HMR server; API-only tests run without HMR. The browser subsequently completed the authenticated Vite `vite-hmr` subprotocol handshake and received Vite's `connected` message. Listener inspection showed Node bound to `0.0.0.0:3000` with no separate Vite HMR port. The current Preview UI flow generated no browser-console errors.
+
+## Phoenix source baseline — not BAYORA data integration
+
+The exact official upstream baseline is `f74341ff0f7f806bc474b37e8ce9e684bab3a0f1`. The targeted upstream identifier test file completed with 64 passed and 2 warnings:
 
 ```sh
 cd /home/ubuntu/bayora-research/phoenix/tests
 ../.tox/unit_tests/bin/pytest -q unit/db/types/test_identifier.py
 ```
 
-**Full upstream unit suite — INCOMPLETE, not a pass:** an attempt used:
+The broader Phoenix unit suite is **incomplete, not a pass**. An earlier `tox run -e unit_tests -- unit/db/types/test_identifier.py` invocation appended its own `unit/` path and ran the full unit directory; its captured output shows 1,840 passing outcome lines and no explicit failure/error lines but ends without a pytest summary. No Phoenix service was started. The supplied Phoenix ZIP matched the exact verified source commit across all 8,447 tracked files with zero missing, extra or mismatched files.
 
-```sh
-cd /home/ubuntu/bayora-research/phoenix
-UV_NO_PROGRESS=1 uvx --python 3.12 tox run -e unit_tests -- unit/db/types/test_identifier.py
-```
+## Implemented and verified scope
 
-The checked-in `tox.ini` appends `unit/` to the supplied test path, so this ran the entire unit directory, not only the named file. Its captured log contains 1,840 `PASSED` result lines and no explicit `FAILED` or `ERROR` result lines, but the process stopped before pytest produced a final summary. Therefore the full upstream unit suite is **incomplete** and must not be reported as passing. The isolated identifier file was then run directly in the existing tox environment and did complete successfully as shown above.
+BAYORA now runs only three closed, bounded synthetic fixtures on the server; rejects arbitrary prompts, targets, tool commands and unknown fields; records server-created run metadata; and serves list/retrieval/health APIs from a versioned SQLite store. SQLite reopen persistence, schema initialization, atomic suite writes, capacity behavior and response validation have regression coverage. Historical browser-local records remain distinctly labeled; malformed local data is not overwritten. Health probes the live local database instead of reporting only process liveness, and Environment distinguishes degraded/blocked state.
 
-These are source tests only; they do not validate BAYORA-to-Phoenix data APIs. No Phoenix server, authorized account, Docker service, trace or dataset workflow was run. BAYORA's Phoenix adapter calls only `/healthz` and remains `not_configured` in this environment.
+The production server is compiled and starts successfully under Node. Local GitHub Actions CI is defined for frozen install, preflight, typecheck, lint, tests, build and production smoke; the remote GitHub workflow has not yet completed on GitHub.
 
-## Not verified by this checkpoint
+## Not verified or still blocked
 
-No owner-machine test, identity-provider flow, protected trace/dataset/evaluation API, cross-user or shared persistence, database migration, cryptographic evidence signing, protected review workflow, effective isolation test, or public deployment was performed. These remain blocked or owner review items; no production-readiness claim is made.
+- Phoenix data integration is not implemented. BAYORA calls only a server-configured `/healthz` health probe. Protected trace/project/dataset/experiment/evaluation routes return an explicit blocked response and the regression test confirms no upstream request is made.
+- No authorized Phoenix instance/account or BAYORA identity provider is configured. Authentication, per-user authorization, cross-user isolation and positive identity tests are therefore **blocked**, not passes. The three fixed run endpoints are intentionally unauthenticated; they accept only built-in synthetic scenario IDs, enforce a process-local write throttle and a 5,000-row ceiling, but are not public-service abuse protection.
+- SQLite is single-process/single-node application persistence. No managed database, multi-instance coordination, cloud persistent volume, migration path beyond schema v1, automated backup/restore, retention/deletion policy, HA or user ownership is set up.
+- Cryptographic signatures, append-only evidence, trusted timestamp, independent evidence verification, report export, human review and acceptance remain unimplemented; the UI explicitly labels records unsigned/unreviewed/unevaluated.
+- No real traces, datasets, evaluations, model calls, external targets, production data or protected credentials were used in the tests.
+- GitHub-hosted CI, an owner-owned machine, public deployment, production secrets, browser-automation across all routes, accessibility audit and owner responsive-layout review have not been verified.
+
+This report demonstrates an integrated backend for fixed synthetic workflows only. It does not establish a complete Phoenix integration or production readiness.

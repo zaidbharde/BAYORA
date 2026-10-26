@@ -2,6 +2,8 @@
 
 > Acceptance clauses below are copied from the approved master specification. Statuses describe evidence available in this sandbox only; skipped or blocked work is not counted as passed. Update statuses as verified outcomes are delivered.
 
+> Scope/status note: Outcomes 1–17 preserve the original approved Phoenix-platform specification and its earlier owner-testing history. The later backend-audit Outcomes 1–8 record the expanded current request and newer evidence; where an earlier status or description is superseded, use the later outcome and current evidence documents without deleting the original acceptance clauses.
+
 ## Source specification
 
 ### Phoenix-Based AI Security Testing Platform
@@ -23,7 +25,7 @@ Do not stop after producing an audit or design plan. Continue through implementa
 
 ## 2. PROJECT OBJECTIVE
 
-**Status: IN PROGRESS.** Separate BAYORA web prototype is runnable and tested; private GitHub transfer and verified owner-testing checkpoint remain pending. Real Phoenix-data integration remains blocked.
+**Status: IN PROGRESS.** Server-side fixed-synthetic APIs, SQLite persistence, compiled production build and Preview E2E workflows now pass; GitHub delivery/checkpoint is pending. Protected Phoenix data integration remains blocked by identity/service prerequisites.
 
 
 Build BAYORA as a professional, browser-based AI security testing and evaluation platform.
@@ -134,7 +136,7 @@ Do not claim that permission from an individual contributor overrides the rights
 
 ## 5. ARCHITECTURE — ACTUAL PHOENIX BACKEND
 
-**Status: BLOCKED.** FastAPI, REST/GraphQL, OTLP and health contracts were checked against source, but no authorized Phoenix service/identity is available. BAYORA only probes `/healthz`; protected trace, project, dataset and evaluation operations remain unavailable.
+**Status: BLOCKED for protected data integration.** Upstream FastAPI, REST/GraphQL, OTLP, trace/dataset/evaluation and health contracts are verified from source; BAYORA exposes only health-only Phoenix probing and an explicit protected-data block. No authorized Phoenix service/identity is available.
 
 
 Inspect the real Phoenix backend and reuse its supported functionality instead of rebuilding equivalent systems unnecessarily.
@@ -180,7 +182,7 @@ Document the data flow between every service and the trust boundaries between th
 
 ## 6. DATABASE AND SERVICE CONFIGURATION
 
-**Status: PASS.** Phoenix SQLite/PostgreSQL configuration and separation are documented; BAYORA database remains disabled and its prototype stores only synthetic records in the current browser. Shared persistence, backup, recovery and retention guarantees are explicitly not claimed.
+**Status: PASS for declared prototype storage.** BAYORA has its own versioned single-node SQLite store, separate from Phoenix and managed MySQL, with an explicit path, 5,000-row cap and tested reopen/atomic-write behavior. No cloud shared DB, automated backup, retention or multi-instance durability is claimed.
 
 
 Inspect the actual database requirements of Phoenix and BAYORA.
@@ -210,7 +212,7 @@ Provide example configuration containing placeholders only.
 
 ## 7. AUTHENTICATION AND AUTHORIZATION
 
-**Status: BLOCKED.** No BAYORA identity provider or authorized Phoenix identity is configured. Protected functionality will remain unavailable as required.
+**Status: BLOCKED for identity/protected operations.** No BAYORA identity provider or authorized Phoenix identity is configured; protected data stays blocked. The unauthenticated write API accepts only fixed built-in non-confidential synthetic fixture IDs and is intended only for trusted local/Preview/single-node use.
 
 
 Design the authentication architecture before exposing integrated services.
@@ -243,7 +245,7 @@ If the available development environment cannot supply an authorized identity, k
 
 ## 8. ORIGINAL BAYORA FRONTEND
 
-**Status: IN PROGRESS.** Seven original responsive routes, live health/error states, honest blocked/empty pages and working local synthetic actions are implemented and smoke-tested; visual/device owner review remains.
+**Status: IN PROGRESS.** Seven original routes now display server/API-backed synthetic data and blocked states; actual Preview verified suite run, individual Security Lab action, Audit provenance and Environment readiness. Owner review of responsive visuals and all page states remains.
 
 
 Build a polished, responsive web interface that presents BAYORA as its own product.
@@ -410,7 +412,7 @@ Do not silently lower thresholds or change expected results to make the benchmar
 
 ## 11. TESTING REQUIREMENTS
 
-**Status: IN PROGRESS.** BAYORA typecheck, lint, 19 tests, production client build, preflight, exact ZIP comparison and live HTTP smoke pass. The isolated Phoenix identifier test file passes 64 tests with 2 warnings. The tox full-unit invocation expanded to the entire unit directory and was interrupted after 1,840 passing outcome lines with no recorded failures/errors and no final pytest summary; the complete upstream suite remains unverified. Protected-data, identity, shared-persistence and production/device integration are not tested.
+**Status: IN PROGRESS.** `pnpm test` passes 41/41; frozen install, preflight, typecheck, lint, compiled build and isolated production smoke pass. Actual Preview exercised suite/individual runs and Audit/Findings/Environment display. Phoenix target file passes 64 with 2 warnings, while its full tox suite is incomplete. Remote CI, owner device/responsive review and protected integration remain unverified/blocked.
 
 
 Establish the baseline for both upstream Phoenix and BAYORA-specific functionality.
@@ -476,7 +478,7 @@ Do not claim the project has been tested on the owner's laptop unless that verif
 
 ## 12. DEPLOYMENT AND DEVELOPER EXPERIENCE
 
-**Status: PASS.** Reproducible local setup, startup, preflight, health and troubleshooting are documented and verified in this sandbox; safe-shutdown instructions are documented but not separately exercised. Owner-machine, production and Phoenix-data verification remain outstanding.
+**Status: PASS for documented local/single-node prototype workflow.** Frozen setup, native SQLite preflight, startup, health, tests, build, production-mode startup/run creation and SIGTERM cleanup are verified. No owner device, public deployment, persistent hosting volume or Phoenix-data flow is verified.
 
 
 Provide a simple, reproducible development workflow.
@@ -512,7 +514,7 @@ Document which features work in the available environment and which require exte
 
 ## 13. GITHUB REPOSITORY STRATEGY
 
-**Status: BLOCKED.** BAYORA-Phoenix is absent. Creating/connecting it through the supported owner-confirmation flow remains pending; existing zaidbharde/BAYORA is preserved.
+**Status: IN PROGRESS.** The latest user instruction authorizes publishing to the existing public `zaidbharde/BAYORA`; a fresh check found it empty on `main` and the authenticated account has push/admin permission. The working code commit and SHA verification are still pending; Manus remains the canonical Webdev remote.
 
 
 Create or use the separate BAYORA destination only after verifying the current GitHub state and authorized access.
@@ -590,7 +592,7 @@ When external authorization, protected credentials, or infrastructure is unavail
 
 ## 15. OWNER-TESTING CHECKPOINT
 
-**Status: READY.** Owner-testing checkpoint has not been created; requires implementation, checks, repository confirmation and remote SHA verification.
+**Status: IN PROGRESS.** Implementation and available tests are complete; publish the verified commit and confirm its exact remote SHA before reporting the owner-testing checkpoint.
 
 
 Once the initial integrated application is runnable and its available tests pass:
@@ -613,7 +615,7 @@ After the owner approves continuation, resume from the latest verified remote co
 
 ## 16. FINAL DELIVERABLES
 
-**Status: IN PROGRESS.** Baseline, original frontend, synthetic harness, architecture/setup/license documentation, regression tests, validation evidence and owner checklist are delivered; protected Phoenix-data integration and verified GitHub owner-testing checkpoint remain.
+**Status: IN PROGRESS.** Verified upstream, implemented backend, UI, synthetic engine, docs, automated tests and Preview workflow are delivered locally. Live Phoenix data integration remains blocked; authorized GitHub push and final remote SHA are pending.
 
 
 Deliver:
@@ -654,3 +656,356 @@ Do not modify the existing BAYORA repository.
 Do not stop after writing a plan.
 
 Deliver real, testable functionality, with honest evidence and clearly documented limitations.
+
+---
+
+## New task: Full backend audit, implementation, end-to-end testing and GitHub delivery
+
+> The clauses under each outcome below are copied verbatim from `/home/ubuntu/upload/pasted_content_2.txt`. Statuses are updated as evidence is produced; source inspection, skipped tests and external blockers are not represented as passes.
+
+### Outcome 1. Full application audit and capability matrix
+
+**Status: PASS — six subsystem reviewers and one synthesis reviewer completed the source audit; the pre-implementation findings and current implementation-evidence matrix are recorded with source and test references.**
+
+**Complete acceptance clauses (verbatim):**
+
+# BAYORA — FULL BACKEND AUDIT, IMPLEMENTATION, END-TO-END TESTING & GITHUB DELIVERY
+
+## Mission
+
+Audit the entire BAYORA application in your current Manus workspace. Determine whether it contains a genuinely functional backend or only a frontend, synthetic demo harness, health probe, or partial API implementation.
+
+If the backend is incomplete, implement the missing functionality required by the approved BAYORA architecture. If the backend already exists, verify it through actual end-to-end tests and fix confirmed defects.
+
+Do not stop after inspecting files or writing an audit report. Execute the available checks, implement necessary fixes, validate the integrated application, and publish the verified project to the authorized GitHub destination.
+
+## 2. Audit the COMPLETE application
+
+Inspect the actual source code, not just the screenshot or plan.
+
+Review:
+
+- Frontend routes, components, forms, and controls.
+- Backend entry points and HTTP APIs.
+- API request and response schemas.
+- Database configuration, schema, migrations, and persistence.
+- Authentication and authorization.
+- Phoenix service integration.
+- Security test orchestration.
+- Dataset and evaluation workflows.
+- Run records, reports, and audit evidence.
+- Environment variables and startup scripts.
+- Dependency manifests and lockfiles.
+- Existing automated tests and CI configuration.
+
+Create a backend capability matrix with these statuses:
+
+- `IMPLEMENTED AND VERIFIED`
+- `IMPLEMENTED BUT UNVERIFIED`
+- `PARTIALLY IMPLEMENTED`
+- `MISSING`
+- `BLOCKED BY EXTERNAL PREREQUISITE`
+
+For every feature, cite the relevant file/API and the test used to validate it.
+
+A React UI, an Express health endpoint, browser localStorage, mock fixtures, or a successful frontend build alone does not establish that the complete backend exists.
+
+
+### Outcome 2. Phoenix service, APIs and data integration
+
+**Status: BLOCKED BY EXTERNAL PREREQUISITE for live protected data — source APIs verified, but no authorized reachable Phoenix service or identity is configured.**
+
+**Complete acceptance clauses (verbatim):**
+
+## 3. Integrate the actual Phoenix backend
+
+The intended architecture is:
+
+- Phoenix: actual upstream AI observability and evaluation capabilities.
+- BAYORA frontend: original user interface and application experience.
+- BAYORA backend: application APIs, authorization, test orchestration, integration, and data coordination.
+- BAYORA security engine: its own security-testing and acceptance logic.
+- Audit layer: evidence and verification appropriate to BAYORA's requirements.
+
+Inspect the exact Phoenix source version and supported APIs. Use the actual interfaces supported by that version.
+
+Verify real integration for whichever capabilities are implemented, including as appropriate:
+
+- Phoenix service startup and readiness.
+- Trace ingestion and retrieval.
+- Projects and datasets.
+- Supported experiments and evaluations.
+- Backend request validation and error handling.
+- Persistence across restarts.
+- Correct frontend display of real backend responses.
+
+Do not treat a successful `/healthz` request as proof of full integration.
+
+Do not fabricate traces, datasets, evaluations, metrics, or service status. Clearly distinguish synthetic demo data from real Phoenix responses.
+
+Keep Phoenix's database configuration separate from BAYORA's application storage unless a supported and tested integration justifies otherwise.
+
+If Phoenix requires its own runtime or database, provision and document it using supported methods. Do not assume Docker is available. Investigate supported non-containerized startup if necessary.
+
+
+### Outcome 3. BAYORA backend, persistence and authentication boundary
+
+**Status: IN PROGRESS — closed synthetic run/suite APIs, validation, SQLite schema/persistence, capacity/rate limits and production startup are implemented and tested. BAYORA identity/per-user authorization is not present; protected Phoenix/data and acceptance workflows remain blocked.**
+
+**Complete acceptance clauses (verbatim):**
+
+## 4. Build the missing BAYORA backend
+
+If the application currently contains only frontend pages and a synthetic harness, implement the missing application backend and integration layer.
+
+Use the existing project stack where practical. Do not replace the architecture without a concrete technical reason.
+
+Implement and verify, where required:
+
+- Backend application startup and health checks.
+- Typed request and response contracts.
+- Input validation.
+- Server-side Phoenix client and service integration.
+- Controlled security-test orchestration.
+- Run status and result retrieval.
+- Persistent records appropriate to the declared deployment model.
+- Dataset and evaluation workflow integration.
+- Useful and safe error responses.
+- Authentication and server-side authorization before protected actions.
+- Evidence and report generation that accurately identifies its provenance.
+- Configuration checks and startup diagnostics.
+
+Browser storage may be used for explicitly local prototype preferences or local-only records, but it must not be described as a complete shared backend or trusted audit system.
+
+Never expose Phoenix credentials, signing keys, or protected data in frontend bundles.
+
+Never accept arbitrary privileged target URLs or unrestricted commands through the test interface.
+
+Start with deterministic, bounded security tests. Clearly scope any real model or external-target testing and require appropriate authorization.
+
+## 5. Security, authentication, and trust
+
+Review the actual authentication behavior of Phoenix and the BAYORA app.
+
+- Do not assume authentication is enabled by default.
+- Do not disable Phoenix security controls to make an integration test pass.
+- Do not grant owner access to the first visitor.
+- Do not bypass server-side identity checks.
+- Do not request passwords, browser cookies, or tokens in chat.
+- Keep protected operations blocked until supported identity and authorization are correctly configured.
+- Do not fabricate trusted signatures or imply synthetic outcomes are signed audit evidence.
+- Prevent confidential evaluation data and sensitive diagnostic information from appearing in ordinary logs or reports.
+
+Verify authorization at the server boundary, not only in the UI.
+
+
+### Outcome 4. License and distribution
+
+**Status: PASS for the requested source-only publication boundary — exact Phoenix ELv2/IP notices and runtime licenses are retained; no Phoenix application code or service is redistributed/hosted. Original BAYORA code has no owner-selected license; public repo visibility is not a license grant.**
+
+**Complete acceptance clauses (verbatim):**
+
+## 6. License and distribution
+
+Inspect the exact Phoenix license and third-party notices for the source revision used.
+
+Phoenix uses Elastic License 2.0 in the reviewed revision; verify this rather than assuming it remains unchanged.
+
+Preserve applicable copyright and license notices. Document the distinction between upstream-derived and original BAYORA code.
+
+Do not remove notices or make inherited code appear independently authored through renaming alone.
+
+Before enabling a public hosted service exposing substantial Phoenix functionality, verify the applicable rights and restrictions. A public source repository and a public hosted service are different deployment models.
+
+You may proceed with permitted development and repository publication where allowed, but do not claim additional authorization based on an informal conversation.
+
+
+### Outcome 5. End-to-end testing
+
+**Status: IN PROGRESS — 41/41 local tests, preflight, typecheck, lint, compiled build and production smoke pass; repeatable server-rendered tests cover Audit/Findings loading, complete-empty, error and truncated states. Preview browser verified suite/individual execution plus SQLite-backed history, Audit labels and Environment readiness. Real Phoenix/auth, remote CI and owner responsive-device checks remain blocked or untested.**
+
+**Complete acceptance clauses (verbatim):**
+
+## 7. End-to-end testing — execute real commands
+
+Run tests in dependency order and record exact results.
+
+### A. Frontend
+
+- Build.
+- Type checking.
+- Linting where configured.
+- Route and component tests.
+- Form validation.
+- Loading, empty, error, and blocked states.
+- Responsive layout checks where practical.
+
+### B. Backend
+
+- Backend build and startup.
+- API contract and validation tests.
+- Unit and regression tests.
+- Database initialization and migration tests.
+- Persistence across restart.
+- Error-handling tests.
+- Authentication and authorization tests.
+
+### C. Phoenix integration
+
+When the service is available:
+
+- Check actual service readiness.
+- Submit a controlled test trace.
+- Retrieve the resulting trace.
+- Verify the actual response schemas.
+- Exercise supported dataset and evaluation APIs.
+- Confirm the frontend displays backend-derived data.
+- Verify timeout, unavailable-service, invalid-response, and authorization-failure behavior.
+
+Do not claim these tests passed when Phoenix was unavailable or the relevant API could not be accessed.
+
+### D. Security engine
+
+- Run the implemented synthetic suite.
+- Validate deterministic outcomes and failure classification.
+- Check unauthorized operations.
+- Check isolation and policy enforcement that the project actually implements.
+- Confirm that the run record matches the executed test.
+- Verify evidence provenance and signature checks where implemented.
+
+Synthetic tests must not be described as proof of production model behavior.
+
+### E. End-to-end application
+
+Launch the full application in the available environment and exercise each primary workflow through the UI and backend.
+
+Verify that:
+1. The frontend loads.
+2. The backend starts and reports its real status.
+3. API requests reach the intended server-side handlers.
+4. Supported operations execute.
+5. Results are persisted according to the declared design.
+6. Results can be retrieved and displayed.
+7. Errors and unavailable dependencies are handled honestly.
+8. Restart behavior is consistent with the documented persistence model.
+9. No credentials or protected data leak into the browser.
+
+If browser automation is available, use it for the critical flows. Otherwise, execute API integration tests and clearly state which browser checks were not performed.
+
+
+### Outcome 6. Confirmed-defect handling loop
+
+**Status: IN PROGRESS — confirmed local-storage limit, health-state, backend JSON/parser, non-JSON suite-body, SQLite capacity, production startup and incomplete-history display defects were reproduced, fixed and regression-tested; final staged review, commit and remote verification remain.**
+
+**Complete acceptance clauses (verbatim):**
+
+## 8. Failure-handling loop
+
+For every confirmed defect:
+
+1. Capture the sanitized error.
+2. Reproduce the issue.
+3. Identify the root cause.
+4. Implement a targeted fix.
+5. Add regression coverage where appropriate.
+6. Rerun the failing test.
+7. Rerun affected integration tests.
+8. Inspect the diff for security and regressions.
+9. Commit and push the verified change.
+10. Verify the remote commit.
+11. Continue to the next actionable issue.
+
+Do not suppress failures, weaken acceptance requirements, or change expected results to produce a green report.
+
+If a test is blocked by missing credentials, infrastructure, or authorization, mark it `BLOCKED` and continue independent work.
+
+
+### Outcome 7. Authorized GitHub delivery
+
+**Status: IN PROGRESS — fresh GitHub check confirms `zaidbharde/BAYORA` is public, empty, on default `main`, and push/admin-authorized. Current working changes remain uncommitted; no remote SHA for this task exists yet.**
+
+**Complete acceptance clauses (verbatim):**
+
+## 1. Project and GitHub destination
+
+Primary destination:
+https://github.com/zaidbharde/BAYORA
+
+Official Phoenix upstream:
+https://github.com/Arize-ai/phoenix
+
+Important initial condition: The primary BAYORA repository was recently checked and appeared empty, with no available source files or branches. Recheck its current state before acting.
+
+Your current Manus workspace may contain the working BAYORA prototype. **Inspect and preserve that actual workspace; do not assume that the empty GitHub repository contains the implementation.**
+
+Before pushing:
+
+- Inspect the existing repository state and current branch.
+- Verify the authenticated GitHub account and write permissions.
+- Preserve the existing workspace and all valid work.
+- Do not push BAYORA changes to the upstream Phoenix repository.
+- Do not overwrite unrelated changes or force-push.
+- If the destination has changed, is no longer empty, or contains unexpected code, reconcile it safely before publishing.
+- If authorized access is unavailable, explain the limitation and provide a clean patch or export.
+
+## 9. GitHub delivery
+
+Publish the verified application to:
+
+https://github.com/zaidbharde/BAYORA
+
+Use a dedicated working branch and a clear commit history. If the repository remains empty, initialize it safely and publish the complete project, including required source files, dependency manifests, tests, and documentation.
+
+Do not commit:
+- Secrets or real environment files.
+- Private keys or signing credentials.
+- Large generated artifacts that should remain outside Git.
+- Confidential evaluation data.
+- Unapproved decrypted datasets.
+- Unverified model binaries.
+
+Add or verify `.gitignore`, example environment configuration, README, setup documentation, and test commands.
+
+After each meaningful, tested change:
+- Commit.
+- Push.
+- Verify the remote commit SHA.
+
+Do not claim that code has been pushed unless the remote repository confirms the commit.
+
+
+### Outcome 8. Final evidence-based handoff
+
+**Status: IN PROGRESS — updated source-cited matrix, implementation docs, exact test evidence, current limits and setup commands are ready; final GitHub branch/SHA and handoff are pending.**
+
+**Complete acceptance clauses (verbatim):**
+
+## 10. Final report
+
+Provide the following:
+
+1. Backend capability matrix.
+2. Components that were genuinely present before your changes.
+3. Missing functionality that was implemented.
+4. Phoenix APIs genuinely integrated.
+5. Database and persistence behavior.
+6. Authentication and authorization status.
+7. Exact commands and tests executed.
+8. Passed, failed, skipped, blocked, and untested counts.
+9. Known defects and unresolved blockers.
+10. Clean setup and startup commands.
+11. Browser URL, if the application is running in Preview.
+12. GitHub branch and verified commit SHA.
+13. Whether the result is a prototype, an integrated development build, or production-ready.
+
+Do not label the project production-ready unless its required security, deployment, persistence, and acceptance criteria have actually been verified.
+
+## Start now
+
+Inspect the current Manus workspace and repository state. Audit the full implementation, then test the actual backend.
+
+If the backend is incomplete, implement the missing components and integrate Phoenix using its supported interfaces. If the backend is already complete, demonstrate that with end-to-end test evidence and fix any failures.
+
+Publish the verified implementation to the specified BAYORA GitHub repository without overwriting unrelated work.
+
+Do not stop at an audit document or plan. Deliver a working, testable application and report precisely what is and is not verified.

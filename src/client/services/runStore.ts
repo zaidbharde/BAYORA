@@ -51,7 +51,7 @@ function isHarnessFinding(value: unknown): value is HarnessFinding {
   );
 }
 
-function isSyntheticRun(value: unknown): value is SyntheticRun {
+export function isSyntheticRunRecord(value: unknown): value is SyntheticRun {
   if (!isRecord(value)) return false;
   return (
     isText(value.id, 160) &&
@@ -61,7 +61,7 @@ function isSyntheticRun(value: unknown): value is SyntheticRun {
     isText(value.scenarioVersion, 128) &&
     isTimestamp(value.startedAt) &&
     isTimestamp(value.completedAt) &&
-    value.mode === "synthetic-local" &&
+    (value.mode === "synthetic-local" || value.mode === "synthetic-server") &&
     (value.outcome === "PASS" || value.outcome === "FAIL") &&
     isText(value.summary, 2048) &&
     isText(value.inputReference, 512) &&
@@ -91,7 +91,7 @@ export function loadRunStore(): RunStoreSnapshot {
     if (
       !Array.isArray(parsed) ||
       parsed.length > MAX_STORED_RUNS ||
-      !parsed.every(isSyntheticRun)
+      !parsed.every((run) => isSyntheticRunRecord(run) && run.mode === "synthetic-local")
     ) {
       return {
         runs: [],
@@ -110,7 +110,7 @@ export function loadRunStore(): RunStoreSnapshot {
 }
 
 export function persistRunStore(runs: SyntheticRun[], writeAllowed: boolean): boolean {
-  if (!writeAllowed) return false;
+  if (!writeAllowed || runs.length > MAX_STORED_RUNS || !runs.every((run) => isSyntheticRunRecord(run) && run.mode === "synthetic-local")) return false;
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(runs));
     return true;

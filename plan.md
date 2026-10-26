@@ -7,9 +7,10 @@
 - The verified root `LICENSE` is Elastic License 2.0 (ELv2); `pyproject.toml` also declares `Elastic-2.0` and includes `LICENSE` and `IP_NOTICE`. No Phoenix code is planned to be copied into BAYORA; Phoenix remains a separate checkout at `/home/ubuntu/bayora-research/phoenix` and will be consumed as a separately run service through supported interfaces.
 - Phoenix's app is FastAPI (`src/phoenix/server/app.py`, `create_app`); its CLI entry point is `phoenix.server.main:main`. The source includes an OTLP HTTP trace route at `/v1/traces`, a REST API under `/v1` (including `GET /v1/projects`), GraphQL at `/graphql`, and health/readiness routes `/healthz` and `/readyz`. The source documents SQLite and PostgreSQL; `PHOENIX_SQL_DATABASE_URL` selects the DB and the default is a SQLite file under Phoenix's working directory. In this exact revision `PHOENIX_ENABLE_AUTH` defaults to `False`; BAYORA will not silently change or bypass that setting.
 - The source development guide uses `uv sync --all-extras --all-packages`, the pinned Node/pnpm workspace, and `pnpm dev`; Phoenix tests are managed by tox (`tox run -e unit_tests`, SQLite by default). Docker is absent in this sandbox. The guide describes non-containerized operation, but Phoenix dependencies/services have not yet been installed or started.
-- GitHub checks: `zaidbharde/BAYORA-Phoenix` does not exist. `zaidbharde/BAYORA` exists, is public, and has default branch `phase12/repository-audit`; it is out of scope and will not be changed. This Webdev project currently uses a Manus-managed repository and GitHub canonical switching requires the platform's owner-confirmation flow.
+- The source/repository facts above are dated planning-baseline observations. A later, task-specific GitHub recheck on 2026-10-27 found the user-selected public `zaidbharde/BAYORA` repository empty, on default branch `main`, with push/admin permission for the authenticated account; the latest task explicitly directs source publication there. The active Webdev project remains on its Manus-managed canonical repository; the user GitHub repo is a separate source destination, not a canonical switch.
+- At the start of the backend-audit work, Manus `main` was `66ae102e53bf42bd8db0f6d746f84fd3f59f97b1`; this task's code was developed on `bayora/full-backend-audit`. These are historical branch facts, not a claim that the current worktree is clean on `main`.
 
-## Implementation approach and scope
+## Original approved implementation approach and scope (baseline; superseded where expanded by the backend-audit addendum below)
 
 Build an original TypeScript/React single-page security workbench, served by a small Node/Express application on the initialized project's port 3000. The app's server boundary will expose only explicit BAYORA APIs. The first owner-testing checkpoint is a prototype, not a production security-testing service:
 
@@ -48,10 +49,56 @@ Three low-probability directions sampled for selection: maritime signal-station 
 - **Wordmark & logo:** custom BAYORA wordmark paired with a segmented signal aperture/shield mark; use original inline SVG geometry, not an upstream Phoenix mark.
 - **Signature brand color:** electric signal lime `#C8F36A`.
 
-## Startup and integration shape
+## Original startup and integration plan (historical baseline; current commands are in `docs/setup.md`)
 
 Use a pinned Node/package-manager toolchain, Vite/React/TypeScript and Express. One dev command listens on `0.0.0.0:3000` for Webdev Preview and serves the SPA plus `/api/health` and `/api/phoenix/status`; `/manus-routes.json` is a static file reflecting the seven page routes. Example environment files contain placeholders only. Local run history is browser-scoped, and no database is configured. Setup/preflight commands must be idempotent and must not delete user data. The first checkpoint will remain unpublished; an owner-facing GitHub connection confirmation is required before a new private repository can become canonical.
 
-## Explicit limits at the first checkpoint
+## Original first-checkpoint limits (historical baseline; current limits are in the backend-audit addendum)
 
 This sandbox has no Docker and no authorized Phoenix service URL/account configured. Phoenix cannot yet be demonstrated with real traces, datasets, experiments, or evaluations here. The first version will not expose protected Phoenix data or claim auth, effective isolation, trusted audit integrity, signed approvals, regression acceptance, or production readiness. The plan leaves those requirements open rather than weakening them. A later increment must first settle supported server-side identity and authorized access, then connect and test the corresponding real Phoenix APIs and persistence before exposing those features.
+
+
+## Backend-audit implementation addendum — 2026-10-27
+
+The new owner request supersedes the original checkpoint's prototype-only implementation limits where it asks for a real BAYORA backend. The original plan remains the source of the visual direction and Phoenix/source/license baseline. The current app was audited directly: it previously had only `/api/health` and a health-only Phoenix probe; scenarios executed in browser code, runs were stored in browser `localStorage`, no database or auth existed, and no Phoenix data APIs were called. The audit found a `MAX_STORED_RUNS` read/write mismatch and an unverified production start path (`tsx` was dev-only).
+
+### Implementation boundary and data flow
+
+- Add Express endpoints for listing and retrieving synthetic BAYORA runs and for executing one built-in synthetic scenario or the fixed full suite. Accept only the closed scenario-ID set; accept no arbitrary prompt text, target URL, shell command, model configuration, tool name, or user-supplied fixture. The server is the sole runner for these API actions and produces the result record itself.
+- Persist these strictly synthetic records in a versioned SQLite schema using Node's supported built-in `node:sqlite` module, with an explicit configurable file path and a single-process, single-instance scope. Keep Phoenix's database separate. Do not enable the project-managed MySQL database because it is currently disabled and is a one-way resource change whose development and production data are shared. The SQLite file is for a self-hosted persistent local/single-node deployment only; ephemeral managed containers and multi-instance deployments are not durable/shared and must remain unclaimed until a supported durable database/ownership design is selected and tested.
+- The records contain only built-in fixture outputs and server-created IDs/timestamps; do not accept or store confidential evaluation data, credentials, personal prompts, or arbitrary user content. Cap the database at 5,000 records and reject additional writes rather than silently deleting history. Keep old browser-local records readable and explicitly distinguish legacy local history from server SQLite records; never erase the user's browser data as part of migration.
+- Change the Security Lab's current supported fixture actions to use the BAYORA HTTP API and render server-derived outcomes. Show backend loading, error, storage-full and empty states. Derived counts must identify their source and remain synthetic, not production-security metrics.
+- Keep Phoenix data operations unavailable. Phoenix source at `f74341ff0f7f806bc474b37e8ce9e684bab3a0f1` supports health/readiness, traces, projects, datasets and experiments/evaluations, but no authorized Phoenix service or caller identity is configured here. Do not call protected data routes, disable Phoenix authentication, or represent health as full integration. Use the exact upstream route/schema only after identity, authorization and reachable service are supplied and verified.
+- Do not add an unauthenticated protected data or evidence endpoint. Current server-run operations are restricted to public, fixed synthetic fixtures and no arbitrary caller data; Phoenix traces/datasets/evaluations, confidential results, signing, human review and acceptance remain blocked until an actual server-validated identity, role/policy and protected data access are available. Follow Manus OAuth as the default if login is later added; do not treat the first visitor as owner or accept browser assertions as identity.
+- Keep audit/evidence labels unsigned, unverified, unreviewed and unevaluated. SQLite JSON persistence is an application record store, not a cryptographic chain of custody or trusted audit system. Keep sanitizing health/configuration failures and never include credentials or protected data in logs.
+
+### Repository, CI and release path
+
+- At the start of this task, Manus `main` was `66ae102e53bf42bd8db0f6d746f84fd3f59f97b1`; this implementation was developed on `bayora/full-backend-audit`. The user explicitly authorized source publication to the existing public `zaidbharde/BAYORA` repository. A read-only GitHub check on 2026-10-27 found it empty (no branches, commits, or files), with authenticated `zaidbharde` push/admin permission. This is a historical pre-push state; record the resulting local/remote SHAs and any later destination changes in the final delivery note. Preserve the Manus canonical remote separately and never push BAYORA changes to `Arize-ai/phoenix`.
+- A GitHub Actions workflow now runs frozen install, preflight, typecheck, lint, tests, client/server build, and isolated production smoke. Local checks pass; remote execution remains unverified until the user-repository push triggers it. Do not claim production readiness from local CI or Preview checks.
+- Retain Phoenix ELv2/IP notices and original-versus-upstream provenance. The requested GitHub repository is public; its source publication is distinct from operating a public hosted Phoenix service. Do not deploy/host substantial Phoenix functionality under this audit task.
+
+### Project structure updates
+
+- `src/server/db.ts` — versioned SQLite schema migration and synchronous repository for fixed synthetic run records.
+- `src/server/api.ts` — health, explicit capability/readiness, synthetic-run list/create/get contracts and the existing health-only Phoenix probe; protected Phoenix-data operations stay unimplemented/blocked.
+- `src/shared/` — closed request/result and provenance types plus the bounded fixture engine reused only within BAYORA.
+- `src/client/services/` — typed same-origin BAYORA API client; local legacy records remain separately labeled and are not authoritative.
+- `tests/` — API/persistence contract tests, database restart durability, capacity/validation and security boundary regressions.
+- `.github/workflows/` — repeatable CI for the checked-in lockfile.
+- `data/` — runtime SQLite files, ignored by Git and never committed.
+
+### Unresolved acceptance boundaries
+
+This increment can establish a functional BAYORA synthetic backend and SQLite restart persistence, but cannot establish authorized live Phoenix data integration, per-user protected access, shared cloud persistence, cryptographic evidence, reviewer acceptance, production deployment, or production security testing without their external service, identity, key/reviewer, and deployment prerequisites. Report those as blocked or unverified rather than lowering the acceptance bar.
+
+
+## Backend delivery update — 2026-10-27
+
+The user-approved backend-audit request supersedes the original front-end/localStorage-only limitation. BAYORA now exposes typed, same-origin APIs for its three closed synthetic fixtures, stores server-generated synthetic records in versioned single-node SQLite, and updates the Overview/Security/Audit/Findings/Environment workflow from actual API responses. Only built-in synthetic IDs are accepted; no model, tool, caller prompt, target URL or protected Phoenix data is involved. SQLite data is separate from Phoenix and from Webdev's managed MySQL; the latter remains disabled. Schema v1 can be reopened across process lifetime in tests, has atomic suite writes, a hard 5,000-record limit and an explicit process-local write limiter. Audit/Findings state components are regression-tested for loading, error, complete-empty and truncated history. The full local suite has 41 passing tests. This is not a shared cloud store or trusted audit ledger.
+
+The API surfaces that remain unavailable are deliberate: there is no BAYORA login/server identity or per-user authorization, no authorized Phoenix instance/caller identity, no Phoenix traces/datasets/experiments/evaluations integration, no report-signing or acceptance workflow. The run routes are not identity-gated but accept only fixed built-in fixture identifiers and are intended only for trusted local/Preview/single-node use; never deploy them publicly as a general-purpose service. The Phoenix route remains health-only.
+
+The production server is compiled by `tsc -p tsconfig.server.json`, serves `dist/client` from `dist/server/server/index.js`, and passed a temporary-database production smoke. A GitHub Actions validation workflow is present; remote execution remains to be observed after push. Full local test/Preview evidence and exact limitations are in `docs/validation-results.md` and `docs/backend-audit.md`.
+
+The user later explicitly selected the existing public `zaidbharde/BAYORA` repository for code delivery; that repository was rechecked empty with admin/push permission. This source-copy destination does not switch the Webdev project's canonical Manus-managed repository and is separate from public Phoenix hosting. Preserve the source repo's history and never force-push. Original BAYORA code has no owner-selected license; no license is inferred from the repo's public visibility.

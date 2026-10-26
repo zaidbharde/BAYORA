@@ -27,7 +27,7 @@ export interface SyntheticRun {
   scenarioVersion: string;
   startedAt: string;
   completedAt: string;
-  mode: "synthetic-local";
+  mode: "synthetic-local" | "synthetic-server";
   outcome: HarnessOutcome;
   summary: string;
   inputReference: string;
@@ -48,6 +48,18 @@ export interface PhoenixHealthStatus {
   httpStatus: number | null;
   message: string;
   scope: "health-only";
+}
+
+export interface SyntheticRunListResponse {
+  runs: SyntheticRun[];
+  total: number;
+  truncated: boolean;
+  source: "bayora-sqlite-synthetic";
+}
+
+export interface SyntheticRunResponse {
+  run: SyntheticRun;
+  source: "bayora-sqlite-synthetic";
 }
 
 export interface ScenarioDefinition {

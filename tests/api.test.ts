@@ -3,13 +3,15 @@ import test from "node:test";
 import type { AddressInfo } from "node:net";
 import express from "express";
 import { createApiRouter, normalizePhoenixHealthUrl } from "../src/server/api.js";
+import { SqliteSyntheticRunStore } from "../src/server/db.js";
 
 async function withApi(
   options: Parameters<typeof createApiRouter>[0],
-  callback: (baseUrl: string) => Promise<void>,
+    callback: (baseUrl: string) => Promise<void>,
 ): Promise<void> {
+  const runStore = new SqliteSyntheticRunStore(":memory:");
   const app = express();
-  app.use("/api", createApiRouter(options));
+  app.use("/api", createApiRouter({ ...options, runStore }));
   const server = await new Promise<ReturnType<typeof app.listen>>((resolve) => {
     const listener = app.listen(0, "127.0.0.1", () => resolve(listener));
   });
@@ -20,14 +22,21 @@ async function withApi(
     await new Promise<void>((resolve, reject) => {
       server.close((error) => (error ? reject(error) : resolve()));
     });
+    runStore.close();
   }
 }
 
-test("BAYORA health returns only the prototype's truthful service mode", async () => {
+test("BAYORA health reports the real SQLite readiness and truthful service scope", async () => {
   await withApi({ phoenixBaseUrl: "" }, async (baseUrl) => {
     const response = await fetch(`${baseUrl}/api/health`);
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), { status: "ok", service: "bayora", mode: "synthetic-only" });
+    assert.deepEqual(await response.json(), {
+      status: "ok",
+      service: "bayora",
+      mode: "synthetic-only",
+      persistence: { state: "ready", count: 0, maxRecords: 5000, schemaVersion: 1 },
+      protectedPhoenixData: "blocked",
+    });
   });
 });
 

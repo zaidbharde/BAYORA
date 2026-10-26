@@ -9,12 +9,13 @@
   },
   "scripts": {
     "dev": "tsx watch src/server/index.ts",
-    "start": "tsx src/server/index.ts",
-    "build": "pnpm typecheck && vite build",
+    "start": "node dist/server/server/index.js",
+    "build": "pnpm typecheck && tsc -p tsconfig.server.json && vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "tsx --test tests/*.test.ts",
-    "preflight": "node scripts/preflight.mjs"
+    "preflight": "node scripts/preflight.mjs",
+    "production-smoke": "node scripts/production-smoke.mjs"
   },
   "dependencies": {
     "@fontsource-variable/geist": "5.3.0",

@@ -8,8 +8,14 @@ import { RunTable } from "../components/RunTable.js";
 export function OverviewPage({
   runs,
   passCount,
+  runCount,
   runSuite,
   storageNotice,
+  runsLoading,
+  runsError,
+  runActionError,
+  runHistoryTruncated,
+  refreshRuns,
   phoenix,
   refreshPhoenix,
   phoenixLoading,
@@ -17,8 +23,14 @@ export function OverviewPage({
 }: {
   runs: SyntheticRun[];
   passCount: number;
-  runSuite: () => SyntheticRun[];
+  runCount: number;
+  runSuite: () => Promise<SyntheticRun[]>;
   storageNotice: string | null;
+  runsLoading: boolean;
+  runsError: string | null;
+  runActionError: string | null;
+  runHistoryTruncated: boolean;
+  refreshRuns: () => Promise<void>;
   phoenix: PhoenixHealthStatus | null;
   refreshPhoenix: () => void;
   phoenixLoading: boolean;
@@ -33,24 +45,28 @@ export function OverviewPage({
       <PageIntro
         eyebrow="CONTROL ROOM / 01"
         title="Test the boundary. Keep the evidence."
-        description="A bounded workbench for synthetic AI security checks. Every count below comes from this browser's recorded fixture runs."
-        action={<PrimaryButton icon={<Play size={16} />} onClick={runSuite}>Run synthetic suite</PrimaryButton>}
+        description="A bounded workbench for server-executed deterministic security fixtures. The run records below come from BAYORA's local SQLite store; legacy browser records are labeled separately."
+        action={<PrimaryButton icon={<Play size={16} />} disabled={runsLoading} onClick={() => { void runSuite().catch(() => undefined); }}>{runsLoading ? "Loading history…" : "Run synthetic suite"}</PrimaryButton>}
       />
 
       <ScopeNotice>
-        <strong>Simulation only.</strong> This harness uses fixed local fixtures; it does not call a model, execute tools, connect to a live target, or verify a deployed security control.
+        <strong>Simulation only.</strong> This backend uses fixed synthetic fixtures. It does not call a model, execute tools, connect to a live target, load Phoenix traces or verify a deployed security control.
       </ScopeNotice>
+      {runsError ? <p className="inline-error" role="alert">Server run history is unavailable: {runsError}</p> : null}
+      {runActionError ? <p className="inline-error" role="alert">{runActionError}</p> : null}
+      {runHistoryTruncated ? <p className="inline-warning" role="status">Showing the latest 500 server records. Overall stored count is shown; pass and mismatch counts below are calculated from the loaded window.</p> : null}
 
       <div className="metric-row">
-        <article className="metric-card metric-card-emphasis"><div className="metric-top"><span>LOCAL RUN RECORDS</span><Clock3 size={16} /></div><strong>{runs.length}</strong><p>Stored in this browser only</p><div className="metric-track"><span style={{ width: `${runs.length ? Math.min(100, 20 + runs.length * 8) : 0}%` }} /></div></article>
-        <article className="metric-card"><div className="metric-top"><span>FIXTURE PASSES</span><CircleCheck size={16} /></div><strong>{passCount}</strong><p>Expected local rule outcomes</p><div className="metric-foot mono">{runs.length ? `${Math.round((passCount / runs.length) * 100)}% of local runs` : "NO DATA YET"}</div></article>
-        <article className="metric-card"><div className="metric-top"><span>HARNESS MISMATCHES</span><ShieldAlert size={16} /></div><strong>{regressions}</strong><p>Not production security findings</p><div className="metric-foot mono">{regressions ? "REVIEW THE FIXTURE" : "NO LOCAL MISMATCHES"}</div></article>
+        <article className="metric-card metric-card-emphasis"><div className="metric-top"><span>STORED SYNTHETIC RUNS</span><Clock3 size={16} /></div><strong>{runsLoading ? "—" : runCount}</strong><p>Server SQLite + legacy browser records</p><div className="metric-track"><span style={{ width: `${runCount ? Math.min(100, 20 + runCount * 8) : 0}%` }} /></div></article>
+        <article className="metric-card"><div className="metric-top"><span>LOADED FIXTURE PASSES</span><CircleCheck size={16} /></div><strong>{runsLoading ? "—" : passCount}</strong><p>Expected local-rule outcomes in loaded history</p><div className="metric-foot mono">{runs.length ? `${Math.round((passCount / runs.length) * 100)}% OF LOADED` : "NO DATA YET"}</div></article>
+        <article className="metric-card"><div className="metric-top"><span>LOADED HARNESS MISMATCHES</span><ShieldAlert size={16} /></div><strong>{runsLoading ? "—" : regressions}</strong><p>Not production security findings</p><div className="metric-foot mono">{regressions ? "REVIEW THE FIXTURE" : "NO LOADED MISMATCHES"}</div></article>
         <article className="metric-card"><div className="metric-top"><span>AVAILABLE FIXTURES</span><Radio size={16} /></div><strong>{scenarios.length.toString().padStart(2, "0")}</strong><p>Deterministic · versioned inputs</p><div className="metric-foot mono">SYNTHETIC V1</div></article>
       </div>
 
       <div className="overview-grid">
-        <Panel title="Recent synthetic runs" kicker="LOCAL EVIDENCE" action={<Link className="text-link" to="/audit">Review records <ArrowRight size={14} /></Link>} className="runs-panel">
+        <Panel title="Recent synthetic runs" kicker="SERVER SQLITE + LEGACY LOCAL" action={<Link className="text-link" to="/audit">Review records <ArrowRight size={14} /></Link>} className="runs-panel">
           <RunTable runs={runs} compact />
+          <div className="panel-actions"><SecondaryButton icon={<RefreshCcw size={15} />} onClick={() => { void refreshRuns(); }} disabled={runsLoading}>{runsLoading ? "Loading…" : "Refresh run history"}</SecondaryButton><span className="caption">Stored total: {runCount}{runHistoryTruncated ? " · latest 500 loaded" : ""}</span></div>
         </Panel>
         <Panel title="Phoenix connection" kicker="UPSTREAM SERVICE" action={<Link className="icon-link" to="/observability" aria-label="Open AI Observability"><ArrowRight size={16} /></Link>} className="phoenix-panel">
           <div className="phoenix-status-card">
@@ -67,13 +83,13 @@ export function OverviewPage({
         <div className="fixture-strip">
           {scenarios.map((scenario, index) => {
             const count = runs.filter((run) => run.scenarioId === scenario.id).length;
-            return <div className="fixture-tile" key={scenario.id}><span className="fixture-index mono">0{index + 1}</span><div><strong>{scenario.title}</strong><span>{scenario.category}</span></div><div className="fixture-count"><strong>{count}</strong><span>runs</span></div></div>;
+            return <div className="fixture-tile" key={scenario.id}><span className="fixture-index mono">0{index + 1}</span><div><strong>{scenario.title}</strong><span>{scenario.category}</span></div><div className="fixture-count"><strong>{count}</strong><span>loaded runs</span></div></div>;
           })}
         </div>
       </Panel>
 
       {lastRun ? <p className="last-run-note mono">LATEST RECORD / {lastRun.id} / {lastRun.integrityStatus}</p> : null}
-      {storageNotice ? <p className="inline-warning">{storageNotice}</p> : null}
+      {storageNotice ? <p className="inline-warning">Legacy browser history: {storageNotice}</p> : null}
     </div>
   );
 }

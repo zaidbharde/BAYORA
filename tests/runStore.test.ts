@@ -84,3 +84,13 @@ test("unreadable browser storage keeps new runs in memory only", () => {
     else Reflect.deleteProperty(globalThis, "window");
   }
 });
+
+test("browser storage refuses a write above its 5,000-record read limit", () => {
+  const run = runSyntheticScenario("tool-allowlist-fixture", { runId: "store-cap-test" });
+  const runs = Array.from({ length: 5001 }, (_, index) => ({ ...run, id: `store-cap-${index}` }));
+  withLocalStorage(null, ({ values, writes }) => {
+    assert.equal(persistRunStore(runs, true), false);
+    assert.equal(values.has(STORAGE_KEY), false);
+    assert.equal(writes(), 0);
+  });
+});

@@ -1,4 +1,5 @@
 import { readFileSync, existsSync } from "node:fs";
+import { DatabaseSync } from "node:sqlite";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,6 +13,14 @@ if (nodeMajor < 22 || (nodeMajor === 22 && nodeMinor < 13)) {
   problems.push(`Node 22.13+ is required; found ${process.versions.node}.`);
 } else {
   passes.push(`Node ${process.versions.node}`);
+}
+try {
+  const database = new DatabaseSync(":memory:");
+  database.prepare("SELECT 1 AS ready").get();
+  database.close();
+  passes.push("built-in node:sqlite can open and query an in-memory database");
+} catch {
+  problems.push("built-in node:sqlite did not open an in-memory database.");
 }
 if (packageJson.packageManager !== "pnpm@11.25.0") {
   problems.push(`Expected packageManager pnpm@11.25.0; found ${packageJson.packageManager ?? "unset"}.`);

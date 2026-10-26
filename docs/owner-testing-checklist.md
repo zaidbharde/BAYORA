@@ -1,19 +1,27 @@
-# Owner-testing checklist — prototype checkpoint
+# Owner-testing checklist — backend implementation checkpoint
 
-Use the Webdev Preview reached from the project workspace; do not treat this local preview as a public deployment.
+Use the Webdev Preview reached from the project workspace; this is not a public deployment. The run APIs accept only fixed synthetic scenario identifiers and are unauthenticated, so use this only in the trusted Preview/local environment.
 
-## Current prototype behavior
+## Frontend and server workflows
 
-1. Open Overview. With an empty browser store, the run and pass counts begin at zero, the fixture catalog reports three available local fixtures, and the Phoenix card reflects the live server status or says it is not configured.
-2. Select **Run synthetic suite**. The recorded-run count should rise by three and the fixture-pass count should reflect the actual local outcomes. Each new record has `synthetic-local` mode, the deterministic fixture-engine configuration, a browser-local evidence reference, and `UNSIGNED_UNVERIFIED`, `NOT_REVIEWED`, and `NOT_EVALUATED` statuses.
-3. Open Security Lab. Review the threat model, procedure and expected behavior on each fixture. Run one fixture and confirm that the result appears as a local record; no external model or tool should be called.
-4. Open Findings. A clean synthetic suite should produce an empty finding state. That empty state is not proof that an AI model or production system is safe.
-5. Open Audit & Evidence. Confirm that the run definition/version, timestamp, synthetic dataset reference, seed and no-model configuration are shown, along with unsigned/unreviewed/unaccepted warnings. Change pages or reload to confirm browser-local persistence; a different browser profile will not share the records.
-6. Open AI Observability and Environment. Without `PHOENIX_BASE_URL`, the app should report “not configured.” With it set to a reachable Phoenix server, a successful `/healthz` response should be described as health-only. No trace or dataset contents should appear. A 401/403 should stay blocked; an invalid URL should be shown as a configuration error.
-7. Inspect `GET /api/health` and `GET /manus-routes.json`; the former should return a BAYORA health response and the latter should return the seven current app page routes as JSON.
-8. Check responsive layout and keyboard focus at desktop and narrow mobile widths. Verify that blocked controls are not presented as functioning data operations and that status words accompany color.
-9. In a **throwaway browser profile only**, test storage recovery by saving malformed JSON under `bayora.synthetic-runs.v1` with a nested value such as `findings: [null]`, then reload. The app should show a storage warning without crashing. Running a fixture should remain in memory only, and the original malformed value should remain unchanged. Do not edit, clear or replace data in the owner's regular browser profile.
+1. Open Overview. The health card should reflect the BAYORA API and actual SQLite schema probe. Phoenix remains `not_configured` unless an operator intentionally provides a reachable server-only `PHOENIX_BASE_URL`; no protected data should appear.
+2. Select **Run synthetic suite**. The server should create three `synthetic-server` records, return server-generated IDs/timestamps, and the UI should update with results. The success label means only a built-in local rule matched its fixed sample.
+3. Open Security Lab. Inspect each threat model, procedure and expected result. Run each fixture individually and then the suite. Check that disabled/busy, history-loading, error and storage-capacity messages are visible and no model/target/tool request is issued.
+4. Open Audit & Evidence. Confirm server SQLite records and any `legacy browser` records have distinct provenance labels. Records should remain unsigned, unverified, not reviewed and not evaluated. Reload and confirm server records return from SQLite. If the API is loading or fails, confirm Audit does not claim the history is empty; if it is truncated, confirm the displayed server total and warning that older records are omitted.
+5. Open Findings. Confirm loading, API-error, complete-empty and truncated-history messages are distinct. Findings must be described as covering only loaded records when truncated; an API error or zero records on an incomplete page is not a no-findings result. An empty synthetic regression list is not a model/deployment assessment.
+6. Open AI Observability and Environment. Phoenix is health-only; no trace, dataset, experiment or evaluation results should appear. `/api/phoenix/data` must remain blocked without making an upstream request.
+7. Check route/API contracts: `GET /api/health`, `GET /api/runs?limit=100`, `GET /api/runs/<id>`, and `/manus-routes.json`. Confirm response data and the seven declared client routes.
+8. Submit an unknown scenario, extra prompt/target field, unknown query, invalid body and >16 KiB JSON body to the run API. Confirm bounded 400/413 JSON errors, zero created records for invalid requests, and no outgoing target request.
+9. Exercise the API throttle using a test configuration, not by generating sustained traffic against an owner's real store. Verify an explicit 429 `Retry-After` and that a rate-limited request adds no record.
+10. Check responsive layout and keyboard focus at desktop and narrow mobile widths; ensure status words accompany color and server/legacy data source labels remain readable.
 
-## Explicitly not accepted by this checkpoint
+## Safe SQLite restart and production checks
 
-This build is not proof of production-grade adversarial testing, live model coverage, protected identity/access, isolation, real benchmark acceptance, persistent shared run history, cryptographic audit evidence, signed approvals, backup/recovery, or production readiness. Do not treat Phoenix health as those claims. Those gates stay open in `TODO.md` until the exact relevant service, identity and evidence workflows are available and verified.
+11. On a disposable local database path, create a synthetic run, stop BAYORA cleanly with `Ctrl+C`, restart it with the same path, then confirm the run is retrievable. Keep the owner's existing DB untouched. Confirm a new temporary database reports schema version 1.
+12. In a disposable test instance with a deliberately low row limit, verify overflow returns `409 storage_full` and preserves all prior rows. Do not fill the normal 5,000-record store.
+13. Run `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`, and `pnpm production-smoke`. The production smoke uses a temporary isolated DB/port and removes only its test directory.
+14. In a **throwaway browser profile only**, confirm retained malformed legacy browser data remains untouched and new writes do not overwrite it. Do not edit, clear, or replace data in the owner's regular browser profile.
+
+## Not accepted by this checkpoint
+
+This implementation is not proof of production-grade adversarial testing, real-model coverage, protected identity/access, a real Phoenix trace/dataset/evaluation integration, multi-instance/durable cloud persistence, shared run history, automatic backup/recovery, cryptographic evidence, signed approvals, independent review, benchmark acceptance or production readiness. The SQLite file is one-node application persistence for non-confidential synthetic outputs only; use a supported identity provider and validated authorization before exposing any protected operation.
