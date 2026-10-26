@@ -83,3 +83,8 @@ pnpm dev
 The server listens on port `3000`; open the project's Webdev Preview from the workspace. The default SQLite file is `data/bayora.sqlite` and can be overridden with server-only `BAYORA_DATABASE_PATH`. Do not expose this unauthenticated synthetic-only prototype as a general-purpose public service.
 
 The Git push to Webdev canonical `origin/main` was accepted at the verified release SHA. The push response did not include a separate Version History/checkpoint receipt, so this report does not independently claim that a checkpoint card was recorded. The auto-publish setting was confirmed off; no public deployment was requested or triggered.
+
+
+## GitHub contribution attribution follow-up
+
+The repository-local Git author email has been corrected to the account's GitHub-provided ID-based `noreply` format. The earlier release commits remain unchanged in public history; no author rewrite or force-push was made. The next meaningful commit from this checkout uses the corrected identity. GitHub documents that commits need an associated email and that its contribution graph can take up to 24 hours to refresh.
