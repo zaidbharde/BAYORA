@@ -1015,7 +1015,7 @@ Do not stop at an audit document or plan. Deliver a working, testable applicatio
 
 ## New task: Branding cleanup, source audit, backend verification and GitHub delivery
 
-> The acceptance clauses below are copied verbatim from `/home/ubuntu/upload/pasted_content_3.txt`. Evidence status reflects this latest task; remote publication/CI remains pending until confirmed.
+> The acceptance clauses below are copied verbatim from `/home/ubuntu/upload/pasted_content_3.txt`. Evidence status reflects this latest task; the final documentation update and main/canonical promotion remain open until confirmed.
 
 ### Outcome 1. Audit all branding references
 
@@ -1042,7 +1042,7 @@ Produce a list of findings before making changes. Distinguish user-visible brand
 
 ### Outcome 2. Establish BAYORA's original product identity
 
-**Status: PASS for local source/UI identity; GitHub description/topics update remains pending.**
+**Status: PASS — BAYORA identity is consistent across package, title, logo, UI and docs; GitHub description/topics were updated and API-verified. Homepage and license remain intentionally unset.**
 
 **Complete acceptance clauses (verbatim):**
 
@@ -1124,7 +1124,7 @@ If real backend functionality is missing, identify the gap and implement safe, s
 
 ### Outcome 6. End-to-end verification
 
-**Status: IN PROGRESS — final local checks pass (46/46), browser routes and accessibility semantics were spot-checked, direct dependency notices were verified; GitHub CI and exhaustive accessibility/responsive acceptance remain pending/unperformed.**
+**Status: IN PROGRESS — 46/46 tests, local build/smoke and source-commit GitHub CI pass; browser routes and accessible names were spot-checked, and the staged-diff pattern scan/direct dependency review passed. No authorized upstream service exists for protected integration/auth tests; no dedicated secret scanner or exhaustive WCAG/responsive review was available, and final docs CI/main promotion remain open.**
 
 **Complete acceptance clauses (verbatim):**
 
@@ -1147,7 +1147,7 @@ Record exact commands and outcomes, including failures, skipped tests, and block
 
 ### Outcome 7. GitHub delivery
 
-**Status: IN PROGRESS — the dedicated `bayora/branding-cleanup` branch is ready locally; commit, push, GitHub metadata update and remote-SHA verification remain pending.**
+**Status: IN PROGRESS — source commit `d63bf45381c01626366dde89204fdbc2a412262d` is pushed and verified on `bayora/branding-cleanup`; its GitHub CI passed, and repository description/topics are API-verified. The documentation follow-up, GitHub `main`, and Webdev canonical checkpoint promotion remain.**
 
 **Complete acceptance clauses (verbatim):**
 

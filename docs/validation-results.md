@@ -44,7 +44,7 @@ The broader Phoenix unit suite is **incomplete, not a pass**. An earlier `tox ru
 
 BAYORA now runs only three closed, bounded synthetic fixtures on the server; rejects arbitrary prompts, targets, tool commands and unknown fields; records server-created run metadata; and serves list/retrieval/health APIs from a versioned SQLite store. SQLite reopen persistence, schema initialization, atomic suite writes, capacity behavior and response validation have regression coverage. Historical browser-local records remain distinctly labeled; malformed local data is not overwritten. Health probes the live local database instead of reporting only process liveness, and Environment distinguishes degraded/blocked state.
 
-The production server is compiled and starts successfully under Node. Local GitHub Actions CI is defined for frozen install, preflight, typecheck, lint, tests, build and production smoke; the remote GitHub workflow for this branding branch is pending its push.
+The production server is compiled and starts successfully under Node. GitHub Actions `BAYORA CI` run `40393471040` passed on source commit `d63bf45381c01626366dde89204fdbc2a412262d`; a later documentation-only branch update and final main/checkpoint promotion remain to be verified.
 
 ## Not verified or still blocked
 
@@ -53,7 +53,7 @@ The production server is compiled and starts successfully under Node. Local GitH
 - SQLite is single-process/single-node application persistence. No managed database, multi-instance coordination, cloud persistent volume, migration path beyond schema v1, automated backup/restore, retention/deletion policy, HA or user ownership is set up.
 - Cryptographic signatures, append-only evidence, trusted timestamp, independent evidence verification, report export, human review and acceptance remain unimplemented; the UI explicitly labels records unsigned/unreviewed/unevaluated.
 - No real traces, datasets, evaluations, model calls, external targets, production data or protected credentials were used in the tests.
-- GitHub-hosted CI, an owner-owned machine, public deployment, production secrets, browser automation across every route/state, exhaustive accessibility audit and owner responsive-layout review have not been verified.
+- GitHub-hosted CI passed on source commit `d63bf45381c01626366dde89204fdbc2a412262d`; the current documentation-only branch update and its CI run, final main/checkpoint promotion, an owner-owned machine, public deployment, production secrets, browser automation across every route/state, exhaustive accessibility audit and owner responsive-layout review remain unverified or not performed.
 
 This report demonstrates an integrated backend for fixed synthetic workflows only. It does not establish a complete Phoenix integration or production readiness.
 
@@ -90,3 +90,12 @@ Accessible names were spot-checked in the rendered tree: the BAYORA wordmark lin
 All 19 direct dependency license files (7 runtime and 12 development/build/test) were compared byte-for-byte with their installed package copies. The dependency notice index's 22 local links resolve. Phoenix's exact verified ELv2 and Arize IP notices are unchanged; no Phoenix service, database, trace, or evaluation data was used.
 
 Immediately before the first push, the authenticated `zaidbharde` account had admin/push permission; the public repository default branch was `main` at `642dd5f705b4a03d542bbedc6d7562f99fe8f95b`, and the same SHA was on the Manus canonical `origin/main`. The dedicated local branch `bayora/branding-cleanup` had not yet been pushed at this point. GitHub-hosted CI for this branding update and the resulting remote commit SHA remain pending; they must be added here after GitHub confirms them.
+
+
+## GitHub branch and metadata update — 2026-10-27
+
+The dedicated GitHub branch `bayora/branding-cleanup` was pushed and verified at `d63bf45381c01626366dde89204fdbc2a412262d`. GitHub Actions run [`40393471040`](https://github.com/zaidbharde/BAYORA/actions/runs/40393471040), workflow `BAYORA CI`, completed successfully in 33 seconds on that exact SHA. Frozen installation, preflight, typecheck, lint, all 46 tests, build, and production smoke passed. The log included non-failing warnings that the pinned GitHub Actions target Node 20 (being forced to Node 24) and that `ubuntu-latest` is migrating to Ubuntu 26; neither warning failed a step. The final documentation follow-up commit and verified `main`/Webdev canonical checkpoint were still pending at this point.
+
+The public repository description was set to: “BAYORA is a synthetic-only AI security testing workbench with bounded server-side fixtures; protected upstream data remains blocked pending identity and access controls.” Topics now are `ai-security`, `express`, `observability`, `react`, `security-testing`, `sqlite`, and `synthetic-testing`. Homepage remains blank because no product website is deployed; no repository license was declared, because the owner has not selected a license for original BAYORA code.
+
+A staged-diff scan checked for high-confidence GitHub/OpenAI/AWS credential patterns and private-key headers and found none. No dedicated `gitleaks`, `trufflehog`, or `detect-secrets` binary was installed, so this is a pattern scan, not an entropy-based secret-scanning tool. Direct-dependency license metadata and copied notices were independently reviewed; this was not a full transitive CVE/advisory audit.

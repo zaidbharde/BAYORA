@@ -46,3 +46,10 @@ A live Preview request exposed Vite's default rejection of the dynamic Manus SG2
 The post-change local validation gate passed: 46/46 tests, frozen install, preflight, typecheck, lint, production build, and isolated production smoke. Read-only Preview checks used the existing `/tmp/bayora-preview-owner.sqlite` file with its four original synthetic records and did not add or modify records. The rendered brand/navigation/button names were reviewed, and automated assertions cover the wordmark and accessibility semantics; no exhaustive axe/WCAG scan or responsive-device owner review was performed.
 
 Immediately before the first push, GitHub showed `zaidbharde/BAYORA` still on `main` at `642dd5f705b4a03d542bbedc6d7562f99fe8f95b`, public, and writable by the authenticated owner. The description/topics/homepage were blank at that point. The dedicated local branch is `bayora/branding-cleanup`; source push, metadata update, and GitHub Actions verification are pending and must be recorded only after remote confirmation.
+
+
+## Remote verification update — 2026-10-27
+
+The owner-authorized GitHub branch `bayora/branding-cleanup` was created without overwriting existing history and verified at `d63bf45381c01626366dde89204fdbc2a412262d`. GitHub Actions run `40393471040` passed all configured checks on that SHA. The repository description now reads: “BAYORA is a synthetic-only AI security testing workbench with bounded server-side fixtures; protected upstream data remains blocked pending identity and access controls.” The verified topics are `ai-security`, `express`, `observability`, `react`, `security-testing`, `sqlite`, and `synthetic-testing`. No homepage was set and the repository remains without a license declaration. These metadata changes were confirmed through GitHub's API.
+
+At this update, GitHub `main` and Manus canonical `origin/main` had not yet been advanced from the reviewed base. The source branch's documentation/status follow-up, its CI run, and the subsequent fast-forward/checkpoint result remain to be recorded after confirmation.

@@ -75,7 +75,7 @@ The new owner request supersedes the original checkpoint's prototype-only implem
 ### Repository, CI and release path
 
 - At the start of this task, Manus `main` was `66ae102e53bf42bd8db0f6d746f84fd3f59f97b1`; this implementation was developed on `bayora/full-backend-audit`. The user explicitly authorized source publication to the existing public `zaidbharde/BAYORA` repository. A read-only GitHub check on 2026-10-27 found it empty (no branches, commits, or files), with authenticated `zaidbharde` push/admin permission. This is a historical pre-push state; record the resulting local/remote SHAs and any later destination changes in the final delivery note. Preserve the Manus canonical remote separately and never push BAYORA changes to `Arize-ai/phoenix`.
-- A GitHub Actions workflow now runs frozen install, preflight, typecheck, lint, tests, client/server build, and isolated production smoke. Local checks pass; remote execution remains unverified until the user-repository push triggers it. Do not claim production readiness from local CI or Preview checks.
+- A GitHub Actions workflow now runs frozen install, preflight, typecheck, lint, tests, client/server build, and isolated production smoke. Local checks pass, and GitHub run `40393471040` passed on source commit `d63bf45381c01626366dde89204fdbc2a412262d`. A documentation/status refresh, its follow-up CI, and final GitHub/canonical `main` promotion remain. Do not claim production readiness from CI or Preview checks.
 - Retain Phoenix ELv2/IP notices and original-versus-upstream provenance. The requested GitHub repository is public; its source publication is distinct from operating a public hosted Phoenix service. Do not deploy/host substantial Phoenix functionality under this audit task.
 
 ### Project structure updates
@@ -111,3 +111,8 @@ Reuse the approved electro-industrial BAYORA design and original signal-aperture
 Extend the readable third-party notice index to all pinned direct runtime and development/build/test packages, with exact copied package notices and version/license roles. Keep the source-only BAYORA repository separate from Phoenix hosting; leave original BAYORA code without a license until the owner selects one.
 
 For Webdev Preview, preserve the shared HTTP-listener HMR fix and allow only the Manus SG2 proxy suffix in Vite's host check (`.sg2.manus.computer`); do not disable host validation globally. This is a Preview-compatibility setting, not a new backend integration. The live source, API, and browser evidence is recorded in `docs/branding-audit.md`, `docs/backend-audit.md`, and `docs/validation-results.md`. GitHub CI and final remote SHAs remain pending until a successful dedicated-branch push.
+
+
+### Source-branch verification update — 2026-10-27
+
+The reviewed implementation commit `d63bf45381c01626366dde89204fdbc2a412262d` is on the dedicated GitHub branch `bayora/branding-cleanup`; GitHub Actions run `40393471040` passed every configured step on that SHA. The user repository now has a synthetic-only, access-boundary-aware description and conservative technical topics; its homepage remains unset because no deployed product site exists, and its BAYORA license remains unassigned pending owner choice. Remaining release steps are a documentation/status refresh after CI, another passing run on that final branch head, and a verified fast-forward to GitHub `main` and the Webdev canonical `origin/main`. Webdev auto-publish is off, so the canonical checkpoint push will not publish a public service.
