@@ -1009,3 +1009,175 @@ If the backend is incomplete, implement the missing components and integrate Pho
 Publish the verified implementation to the specified BAYORA GitHub repository without overwriting unrelated work.
 
 Do not stop at an audit document or plan. Deliver a working, testable application and report precisely what is and is not verified.
+
+
+---
+
+## New task: Branding cleanup, source audit, backend verification and GitHub delivery
+
+> The acceptance clauses below are copied verbatim from `/home/ubuntu/upload/pasted_content_3.txt`. Evidence status reflects this latest task; remote publication/CI remains pending until confirmed.
+
+### Outcome 1. Audit all branding references
+
+**Status: PASS — read-only findings were recorded before changes, and the post-change user-visible copy was verified in source and Preview.**
+
+**Complete acceptance clauses (verbatim):**
+
+Search the complete application source and project files for upstream product names, logos, descriptions, URLs, default titles, sample labels, and inherited UI elements.
+
+Inspect:
+
+- README and project documentation.
+- Page titles, headings, navigation, logos, and favicons.
+- UI labels, dialogs, notifications, and empty states.
+- API responses and error messages.
+- Backend configuration and service descriptions.
+- Package metadata and application manifests.
+- Environment templates and startup output.
+- Generated reports and sample data.
+- Test fixtures and demo content.
+- GitHub descriptions and project metadata where editable.
+
+Produce a list of findings before making changes. Distinguish user-visible branding from internal technical dependencies and legally required notices.
+
+### Outcome 2. Establish BAYORA's original product identity
+
+**Status: PASS for local source/UI identity; GitHub description/topics update remains pending.**
+
+**Complete acceptance clauses (verbatim):**
+
+Use BAYORA as the product name consistently.
+
+Review and improve:
+
+- Logo and wordmark.
+- Browser title and favicon.
+- Dashboard navigation and page headings.
+- README introduction and product description.
+- UI copy and terminology.
+- Error and status messages.
+- Demo scenario names and test-report presentation.
+- Package descriptions and application metadata.
+
+Use an original design language appropriate for an AI security-testing platform.
+
+Do not simply replace every occurrence of an upstream name with BAYORA. Update descriptions and workflows so that they accurately describe BAYORA's own functionality.
+
+### Outcome 3. Preserve technical correctness
+
+**Status: PASS — integration routes, configuration names, type identifiers, upstream API/protocol names, and source-revision metadata are retained; the Preview allowlist is narrow.**
+
+**Complete acceptance clauses (verbatim):**
+
+The application must continue to use the actual backend integrations that are intended and implemented.
+
+Do not rename internal Python modules, package imports, API paths, database objects, environment variables, dependency identifiers, protocol identifiers, or upstream package names if doing so would break compatibility.
+
+Where internal dependency references are necessary, keep them technically correct.
+
+If a backend dependency identifies itself through its standard protocol or version metadata, do not falsify that information to disguise the dependency.
+
+The BAYORA interface may present a clear application identity while keeping technical diagnostics accurate.
+
+### Outcome 4. Legal and attribution requirements
+
+**Status: PASS — exact Phoenix ELv2/IP notices and all 19 direct runtime/development dependency notices are indexed and preserved; original BAYORA has no assigned license.**
+
+**Complete acceptance clauses (verbatim):**
+
+Inspect the exact licenses of inherited source code and dependencies.
+
+Preserve required copyright, license, and notice files.
+
+Do not remove attribution required by the applicable license. Do not modify Git history to conceal source provenance, remove required notices, or present inherited implementation as entirely original work.
+
+Create or update an internal `docs/THIRD_PARTY_NOTICES.md` or equivalent document recording relevant dependencies, versions, licenses, and required notices.
+
+Keep legal attribution separate from ordinary product marketing. It need not dominate the dashboard, but it must remain accessible and compliant.
+
+### Outcome 5. Verify backend completeness
+
+**Status: PASS for verified synthetic backend capabilities; live protected upstream data/authentication remain explicitly blocked by external prerequisites.**
+
+**Complete acceptance clauses (verbatim):**
+
+Do not limit this task to branding.
+
+Inspect whether the current backend provides real functionality or only a frontend, health endpoint, synthetic harness, or mock API.
+
+Verify the actual implementation and integration of:
+
+- API routes and response schemas.
+- Test-run creation and execution.
+- Run-result retrieval.
+- Database persistence, where implemented.
+- Observability and evaluation integration.
+- Authentication and authorization.
+- Error handling.
+- Audit and evidence handling.
+
+Create a capability matrix showing which functions are implemented and tested, partially implemented, unavailable, or blocked.
+
+Do not call a health check proof of full backend integration.
+
+If real backend functionality is missing, identify the gap and implement safe, supported features that fit the existing architecture. Do not invent metrics, return fake successful responses, or mark unexecuted tests as passed.
+
+### Outcome 6. End-to-end verification
+
+**Status: IN PROGRESS — final local checks pass (46/46), browser routes and accessibility semantics were spot-checked, direct dependency notices were verified; GitHub CI and exhaustive accessibility/responsive acceptance remain pending/unperformed.**
+
+**Complete acceptance clauses (verbatim):**
+
+Run the relevant automated checks after modifications:
+
+- Frontend production build.
+- Type checking and linting where available.
+- Unit and regression tests.
+- API tests.
+- Backend integration tests.
+- Important browser workflows, where the environment permits.
+- Branding and accessibility checks.
+- Secret scanning and dependency review.
+
+Test the real application rather than only inspecting screenshots or source files.
+
+Verify that branding changes have not broken imports, routes, configuration, API behavior, or build output.
+
+Record exact commands and outcomes, including failures, skipped tests, and blockers.
+
+### Outcome 7. GitHub delivery
+
+**Status: IN PROGRESS — the dedicated `bayora/branding-cleanup` branch is ready locally; commit, push, GitHub metadata update and remote-SHA verification remain pending.**
+
+**Complete acceptance clauses (verbatim):**
+
+Inspect the current `zaidbharde/BAYORA` repository before pushing.
+
+If the remote is empty, initialize it safely with the verified application source, required configuration templates, documentation, and tests.
+
+If it contains existing work, preserve it and reconcile changes rather than overwriting it.
+
+Use a dedicated working branch. Inspect the final diff for secrets and unintended changes, then commit and push coherent verified changes.
+
+Verify the resulting remote commit SHA. Do not claim a successful push without remote confirmation.
+
+### Outcome 8. Final report
+
+**Status: IN PROGRESS — source-cited capability, branding and validation reports are updated; final remote branch/SHA and delivery handoff remain pending.**
+
+**Complete acceptance clauses (verbatim):**
+
+Report:
+
+1. Branding references found and changed.
+2. References retained for technical correctness or license compliance.
+3. Backend capabilities actually verified.
+4. Exact tests executed and their results.
+5. Remaining backend gaps or external blockers.
+6. Files changed.
+7. GitHub branch and verified commit SHA.
+8. How to run the application and open the Preview.
+
+Start by auditing the actual project, then implement, test, and push the verified changes. Do not stop at an audit report alone.
+
+The goal is a distinct, credible BAYORA product with correct backend behavior, honest claims, and compliant source attribution.

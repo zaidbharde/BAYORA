@@ -38,7 +38,7 @@ export function App() {
         setPhoenixError("The BAYORA server returned an unexpected health response.");
       }
     } catch {
-      setPhoenixError("BAYORA could not retrieve Phoenix health status.");
+      setPhoenixError("BAYORA could not retrieve the upstream health status.");
     } finally {
       setPhoenixLoading(false);
     }

@@ -7,7 +7,7 @@ export function RunTable({ runs, compact = false }: { runs: SyntheticRun[]; comp
   if (runs.length === 0) {
     return (
         <EmptyState title="No synthetic runs recorded">
-        Run a built-in fixture from the Security Lab. Nothing is loaded from Phoenix or a target model.
+        Run a built-in fixture from the Security Lab. No external traces or target-model records are loaded.
       </EmptyState>
     );
   }

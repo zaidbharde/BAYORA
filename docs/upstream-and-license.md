@@ -26,3 +26,6 @@ BAYORA is a separate integration client, not a hosted Phoenix service. At the ow
 | IBM Plex Mono font package | 5.3.0 | SIL Open Font License 1.1 | Identifiers and data |
 
 Exact package versions are pinned in `package.json` and transitive resolution is pinned in `pnpm-lock.yaml`. Full notice texts copied from the installed, pinned package distributions are retained under `third-party-notices/runtime/`; the exact upstream Phoenix `LICENSE` and `IP_NOTICE` are under `third-party-notices/phoenix/`. The font files are distributed from the published font packages without modification. The project does not assign an independent license to original BAYORA code in this prototype because the owner did not specify one; the upstream Phoenix notice applies only to its separately licensed code and notices, not to the BAYORA implementation.
+
+
+For the exact notices and license texts of every direct runtime and development/build/test dependency pinned by this project, see the [third-party notices and dependency licenses index](THIRD_PARTY_NOTICES.md). The complete package-distributed direct development dependency license texts are retained under `third-party-notices/development/`.

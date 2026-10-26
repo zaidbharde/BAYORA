@@ -50,7 +50,7 @@ export function OverviewPage({
       />
 
       <ScopeNotice>
-        <strong>Simulation only.</strong> This backend uses fixed synthetic fixtures. It does not call a model, execute tools, connect to a live target, load Phoenix traces or verify a deployed security control.
+        <strong>Simulation only.</strong> This backend uses fixed synthetic fixtures. It does not call a model, execute tools, connect to a live target, load upstream traces or verify a deployed security control.
       </ScopeNotice>
       {runsError ? <p className="inline-error" role="alert">Server run history is unavailable: {runsError}</p> : null}
       {runActionError ? <p className="inline-error" role="alert">{runActionError}</p> : null}
@@ -68,10 +68,10 @@ export function OverviewPage({
           <RunTable runs={runs} compact />
           <div className="panel-actions"><SecondaryButton icon={<RefreshCcw size={15} />} onClick={() => { void refreshRuns(); }} disabled={runsLoading}>{runsLoading ? "Loading…" : "Refresh run history"}</SecondaryButton><span className="caption">Stored total: {runCount}{runHistoryTruncated ? " · latest 500 loaded" : ""}</span></div>
         </Panel>
-        <Panel title="Phoenix connection" kicker="UPSTREAM SERVICE" action={<Link className="icon-link" to="/observability" aria-label="Open AI Observability"><ArrowRight size={16} /></Link>} className="phoenix-panel">
+        <Panel title="Observability service" kicker="UPSTREAM SERVICE" action={<Link className="icon-link" to="/observability" aria-label="Open AI Observability"><ArrowRight size={16} /></Link>} className="phoenix-panel">
           <div className="phoenix-status-card">
             <span className={`phoenix-orb ${connected ? "orb-live" : ""}`}><Radio size={19} /></span>
-            <div className="phoenix-status-copy"><strong>{phoenix?.state === "healthy" ? "Health endpoint responding" : phoenix?.state === "not_configured" ? "Not configured" : phoenix?.state === "blocked" ? "Health probe denied" : phoenix?.state === "error" ? "Configuration error" : phoenix?.state === "unavailable" ? "Phoenix unavailable" : "Awaiting health result"}</strong><span>{phoenix?.message ?? "Checking the server-side health route…"}</span></div>
+            <div className="phoenix-status-copy"><strong>{phoenix?.state === "healthy" ? "Health endpoint responding" : phoenix?.state === "not_configured" ? "Not configured" : phoenix?.state === "blocked" ? "Health probe denied" : phoenix?.state === "error" ? "Configuration error" : phoenix?.state === "unavailable" ? "Upstream unavailable" : "Awaiting health result"}</strong><span>{phoenix?.message ?? "Checking the server-side health route…"}</span></div>
           </div>
           <div className="phoenix-meta"><span>PROBE PATH</span><code>/healthz</code><span className="phoenix-meta-separator" /><span>DATA ACCESS</span><StatusBadge label="BLOCKED" tone="warn" /></div>
           {phoenixError ? <p className="inline-error" role="alert">{phoenixError}</p> : null}

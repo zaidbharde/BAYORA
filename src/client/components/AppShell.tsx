@@ -30,12 +30,12 @@ function pageName(pathname: string): string {
 }
 
 function phoenixLabel(status: PhoenixHealthStatus | null): { label: string; tone: "good" | "warn" | "bad" | "muted" } {
-  if (!status) return { label: "Checking Phoenix", tone: "muted" };
-  if (status.state === "healthy") return { label: "Phoenix healthy", tone: "good" };
-  if (status.state === "blocked") return { label: "Phoenix probe blocked", tone: "warn" };
-  if (status.state === "not_configured") return { label: "Phoenix not configured", tone: "muted" };
-  if (status.state === "error") return { label: "Phoenix configuration error", tone: "warn" };
-  return { label: "Phoenix unavailable", tone: "bad" };
+  if (!status) return { label: "Checking upstream", tone: "muted" };
+  if (status.state === "healthy") return { label: "Upstream healthy", tone: "good" };
+  if (status.state === "blocked") return { label: "Upstream probe blocked", tone: "warn" };
+  if (status.state === "not_configured") return { label: "Upstream not configured", tone: "muted" };
+  if (status.state === "error") return { label: "Upstream configuration error", tone: "warn" };
+  return { label: "Upstream unavailable", tone: "bad" };
 }
 
 export function AppShell({

@@ -200,7 +200,7 @@ export function createApiRouter(options: ApiOptions = {}): Router {
         state: "not_configured",
         checkedAt: null,
         httpStatus: null,
-        message: "PHOENIX_BASE_URL is not set on the server; Phoenix data operations are unavailable.",
+        message: "The upstream service URL is not set on the server; protected data operations are unavailable.",
         scope: "health-only",
       };
       response.json(result);
@@ -213,7 +213,7 @@ export function createApiRouter(options: ApiOptions = {}): Router {
         state: "error",
         checkedAt,
         httpStatus: null,
-        message: "The server-side Phoenix URL is invalid. Use an HTTP(S) base URL without credentials, query, or fragment.",
+        message: "The server-side upstream service URL is invalid. Use an HTTP(S) base URL without credentials, query, or fragment.",
         scope: "health-only",
       };
       response.status(503).json(result);
@@ -234,10 +234,10 @@ export function createApiRouter(options: ApiOptions = {}): Router {
         checkedAt,
         httpStatus: probe.status,
         message: probe.ok
-          ? "Phoenix returned a successful health response. This verifies health only, not trace access or security controls."
+          ? "The upstream service returned a successful health response. This verifies health only, not trace access or security controls."
           : probe.status === 401 || probe.status === 403
-            ? "The Phoenix health probe was denied; no protected data was requested."
-            : "Phoenix did not return a successful health response.",
+            ? "The upstream health probe was denied; no protected data was requested."
+            : "The upstream service did not return a successful health response.",
         scope: "health-only",
       };
       response.status(probe.ok ? 200 : 502).json(result);
@@ -246,7 +246,7 @@ export function createApiRouter(options: ApiOptions = {}): Router {
         state: "unavailable",
         checkedAt,
         httpStatus: null,
-        message: "Phoenix health could not be reached from the BAYORA server. Check the server URL and service availability.",
+        message: "The upstream health service could not be reached from the BAYORA server. Check the server URL and service availability.",
         scope: "health-only",
       };
       response.status(502).json(result);
@@ -254,7 +254,7 @@ export function createApiRouter(options: ApiOptions = {}): Router {
   });
 
   router.get("/phoenix/data", (_request, response) => {
-    apiError(response, 503, "protected_operation_blocked", "Phoenix data operations are unavailable until server-validated identity, authorization, and an authorized Phoenix service are configured.");
+    apiError(response, 503, "protected_operation_blocked", "Protected upstream data operations are unavailable until server-validated identity, authorization, and an authorized upstream service are configured.");
   });
 
   return router;

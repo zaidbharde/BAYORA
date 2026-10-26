@@ -102,3 +102,12 @@ The API surfaces that remain unavailable are deliberate: there is no BAYORA logi
 The production server is compiled by `tsc -p tsconfig.server.json`, serves `dist/client` from `dist/server/server/index.js`, and passed a temporary-database production smoke. A GitHub Actions validation workflow is present; remote execution remains to be observed after push. Full local test/Preview evidence and exact limitations are in `docs/validation-results.md` and `docs/backend-audit.md`.
 
 The user later explicitly selected the existing public `zaidbharde/BAYORA` repository for code delivery; that repository was rechecked empty with admin/push permission. This source-copy destination does not switch the Webdev project's canonical Manus-managed repository and is separate from public Phoenix hosting. Preserve the source repo's history and never force-push. Original BAYORA code has no owner-selected license; no license is inferred from the repo's public visibility.
+
+
+## Branding cleanup and Preview compatibility update — 2026-10-27
+
+Reuse the approved electro-industrial BAYORA design and original signal-aperture mark; do not import upstream artwork or assign a new license. Keep BAYORA as the only user-facing product identity across title, wordmark, package description, README and GitHub description. Present service state as “upstream” in user-visible copy, while retaining exact internal `/api/phoenix/*` routes, `PhoenixHealthStatus` types, `PHOENIX_BASE_URL` configuration, protocol/API identifiers, source documentation, and legally required notices. Do not alter standard upstream metadata to hide a dependency.
+
+Extend the readable third-party notice index to all pinned direct runtime and development/build/test packages, with exact copied package notices and version/license roles. Keep the source-only BAYORA repository separate from Phoenix hosting; leave original BAYORA code without a license until the owner selects one.
+
+For Webdev Preview, preserve the shared HTTP-listener HMR fix and allow only the Manus SG2 proxy suffix in Vite's host check (`.sg2.manus.computer`); do not disable host validation globally. This is a Preview-compatibility setting, not a new backend integration. The live source, API, and browser evidence is recorded in `docs/branding-audit.md`, `docs/backend-audit.md`, and `docs/validation-results.md`. GitHub CI and final remote SHAs remain pending until a successful dedicated-branch push.

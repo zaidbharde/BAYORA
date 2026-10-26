@@ -91,16 +91,16 @@ The matrix above is the dated **pre-implementation audit snapshot**. The followi
 | Legacy browser history safety and the 5,000-record mismatch | IMPLEMENTED AND VERIFIED | `src/client/services/runStore.ts`, `src/client/App.tsx`, `tests/runStore.test.ts` | Browser-local records remain user-editable and per-profile. They are not an audit ledger. |
 | Environment health/readiness display | IMPLEMENTED AND VERIFIED | `src/client/pages/EnvironmentPage.tsx`, `tests/backend-api.test.ts`, Preview navigation | Readiness is limited to local SQLite schema and the configured health probe, not all downstream services. |
 | Findings, observability, evaluations and Audit & Evidence UI | PARTIALLY IMPLEMENTED | `src/client/pages/*`; `tests/pages.test.ts` renders Audit/Findings loading, error, complete-empty and truncated-history states; Preview verified Audit labels | UI state rendering is regression-tested, but tests are server-rendered components, not browser-interaction coverage for every route. Findings are harness-only, protected Phoenix data/evaluation is blocked, and Audit is provenance metadata rather than signed/trusted evidence. No report, signature, independent verification or acceptance exists. |
-| Compiled production server and CI | IMPLEMENTED BUT UNVERIFIED ON REMOTE CI | `tsconfig.server.json`, `package.json`, `.github/workflows/ci.yml`, `scripts/production-smoke.mjs`; local build/smoke passed | CI is configured but has not yet been observed completing on GitHub. Production smoke used temporary local storage; no deployment/volume/secrets target was provisioned. |
+| Compiled production server and CI | IMPLEMENTED LOCALLY; REMOTE CI PENDING | `tsconfig.server.json`, `package.json`, `.github/workflows/ci.yml`, `scripts/production-smoke.mjs`; final local build/smoke passed | The new branch has not yet been pushed to trigger GitHub CI. Production smoke used temporary local storage; no deployment/volume/secrets target was provisioned. |
 | Phoenix upstream/license boundary | IMPLEMENTED AND VERIFIED | `docs/upstream-and-license.md`, exact `third-party-notices/phoenix/LICENSE` and `IP_NOTICE`, snapshot verifier | No Phoenix application source is included. Original BAYORA code has no project-chosen license; GitHub repository publication is distinct from hosted service deployment. |
 
 ### Current test evidence
 
 - `pnpm install --frozen-lockfile`: pass.
 - `pnpm preflight`, `pnpm typecheck`, `pnpm lint`: pass.
-- `pnpm test`: 41 passed, 0 failed, 0 skipped.
+- `pnpm test`: 46 passed, 0 failed, 0 skipped, 0 cancelled, 0 todo. Includes four brand-metadata/UI regressions and a bounded Vite Preview-host/HMR regression.
 - `pnpm build` and `pnpm production-smoke`: pass, including a compiled server run on an isolated temporary SQLite file.
-- Browser Preview: suite click persisted and displayed three server runs; one individual Security Lab action produced a fourth; Audit showed SQLite provenance and unsigned/unreviewed/unevaluated labels; Environment showed SQLite ready and protected identity/Phoenix data blocked; no browser-console errors.
+- Browser Preview before the branding update: suite click persisted three server runs and an individual Security Lab action produced a fourth. After the branding update, Overview, Security Lab, Observability, Evaluations, Audit, and Environment rendered correctly against the same four-record isolated Preview database without further writes; user-facing copy uses BAYORA and generic upstream terms while keeping real protected data blocked.
 - Phoenix upstream targeted identifier file: 64 passed, 2 warnings. Full upstream unit suite did not produce a summary and is still incomplete; neither test is a BAYORA-Phoenix integration test.
 
 ### Scope/hosting decision

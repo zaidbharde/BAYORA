@@ -1,7 +1,12 @@
 {
-  "name": "bayora-phoenix",
+  "name": "bayora-ai-security-workbench",
   "version": "0.1.0",
   "private": true,
+  "description": "BAYORA — synthetic-only AI security testing workbench with bounded server-side fixture runs.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zaidbharde/BAYORA"
+  },
   "type": "module",
   "packageManager": "pnpm@11.25.0",
   "engines": {

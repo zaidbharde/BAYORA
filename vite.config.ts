@@ -8,6 +8,8 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
+    // Manus Preview uses dynamic subdomains inside the SG2 proxy zone; do not disable host checks globally.
+    allowedHosts: [".sg2.manus.computer"],
     host: "0.0.0.0",
   },
 });

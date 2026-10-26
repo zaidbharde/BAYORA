@@ -29,8 +29,8 @@ export function AuditPage({ runs, storageNotice, history }: AuditPageProps) {
     : history.error
       ? "The history request failed, so an empty history cannot be confirmed."
       : history.truncated
-        ? "The API reports server records but returned an empty page. The history is incomplete; do not interpret this as an empty store."
-        : "Start a synthetic fixture in the Security Lab. No protected Phoenix information is stored here.";
+      ? "The API reports server records but returned an empty page. The history is incomplete; do not interpret this as an empty store."
+        : "Start a synthetic fixture in the Security Lab. No protected upstream information is stored here.";
 
   return (
     <div className="page-stack">
