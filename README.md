@@ -26,6 +26,7 @@ Run checks with `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`, and `p
 - [Third-party notices and direct dependency licenses](docs/THIRD_PARTY_NOTICES.md)
 - [Branding audit findings](docs/branding-audit.md)
 - [Validation evidence and limitations](docs/validation-results.md)
+- [Final release report](docs/release-report.md)
 - [Owner-testing checklist](docs/owner-testing-checklist.md)
 - [Full acceptance/status register](TODO.md)
 - [Approved plan and backend-audit implementation addendum](plan.md)

@@ -116,3 +116,8 @@ For Webdev Preview, preserve the shared HTTP-listener HMR fix and allow only the
 ### Source-branch verification update — 2026-10-27
 
 The reviewed implementation commit `d63bf45381c01626366dde89204fdbc2a412262d` is on the dedicated GitHub branch `bayora/branding-cleanup`; GitHub Actions run `40393471040` passed every configured step on that SHA. The user repository now has a synthetic-only, access-boundary-aware description and conservative technical topics; its homepage remains unset because no deployed product site exists, and its BAYORA license remains unassigned pending owner choice. Remaining release steps are a documentation/status refresh after CI, another passing run on that final branch head, and a verified fast-forward to GitHub `main` and the Webdev canonical `origin/main`. Webdev auto-publish is off, so the canonical checkpoint push will not publish a public service.
+
+
+### Final source promotion update — 2026-10-27
+
+GitHub `main`, the dedicated `bayora/branding-cleanup` branch, and Webdev canonical `origin/main` were verified/advanced to `1591148eea4320a795de824e77cad0ad78d83666`; GitHub main CI run `40394483081` and branch CI run `40394266276` passed on that SHA. Canonical `origin/main` had been fetched and confirmed at the reviewed base immediately before its normal fast-forward. Auto-publish remained disabled. The canonical Git push succeeded, but no explicit Webdev Version History/checkpoint receipt surfaced; do not claim a separately verified checkpoint card. The user's source-only GitHub delivery is complete; see `docs/release-report.md`.

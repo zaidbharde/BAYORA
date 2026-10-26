@@ -1015,7 +1015,7 @@ Do not stop at an audit document or plan. Deliver a working, testable applicatio
 
 ## New task: Branding cleanup, source audit, backend verification and GitHub delivery
 
-> The acceptance clauses below are copied verbatim from `/home/ubuntu/upload/pasted_content_3.txt`. Evidence status reflects this latest task; the final documentation update and main/canonical promotion remain open until confirmed.
+> The acceptance clauses below are copied verbatim from `/home/ubuntu/upload/pasted_content_3.txt`. Final status reflects the verified source branch/main promotion; live upstream identity and protected-data workflows remain external blockers.
 
 ### Outcome 1. Audit all branding references
 
@@ -1124,7 +1124,7 @@ If real backend functionality is missing, identify the gap and implement safe, s
 
 ### Outcome 6. End-to-end verification
 
-**Status: IN PROGRESS — 46/46 tests, local build/smoke and source-commit GitHub CI pass; browser routes and accessible names were spot-checked, and the staged-diff pattern scan/direct dependency review passed. No authorized upstream service exists for protected integration/auth tests; no dedicated secret scanner or exhaustive WCAG/responsive review was available, and final docs CI/main promotion remain open.**
+**Status: PASS WITH DOCUMENTED LIMITS — 46/46 tests, local build/smoke, branch CI, and main CI passed; browser routes and accessible names were spot-checked; direct dependency notices and a high-confidence staged-diff pattern scan were reviewed. No authorized upstream service exists for protected integration/auth tests; no dedicated secret scanner or exhaustive WCAG/responsive review was available. See `docs/validation-results.md` and `docs/release-report.md`.**
 
 **Complete acceptance clauses (verbatim):**
 
@@ -1147,7 +1147,7 @@ Record exact commands and outcomes, including failures, skipped tests, and block
 
 ### Outcome 7. GitHub delivery
 
-**Status: IN PROGRESS — source commit `d63bf45381c01626366dde89204fdbc2a412262d` is pushed and verified on `bayora/branding-cleanup`; its GitHub CI passed, and repository description/topics are API-verified. The documentation follow-up, GitHub `main`, and Webdev canonical checkpoint promotion remain.**
+**Status: PASS — `bayora/branding-cleanup` and GitHub `main` were verified at `1591148eea4320a795de824e77cad0ad78d83666`; branch and main CI passed, and repository description/topics were API-verified. Webdev canonical `origin/main` was advanced to the same SHA by fast-forward. A separate platform Version History receipt was not exposed, so no checkpoint-card claim is made.**
 
 **Complete acceptance clauses (verbatim):**
 
@@ -1163,7 +1163,7 @@ Verify the resulting remote commit SHA. Do not claim a successful push without r
 
 ### Outcome 8. Final report
 
-**Status: IN PROGRESS — source-cited capability, branding and validation reports are updated; final remote branch/SHA and delivery handoff remain pending.**
+**Status: PASS — the capability matrix, exact test evidence, branding/legal findings, limitations, run instructions, remote refs, and caveats are in `docs/release-report.md` and its supporting audits; the verified GitHub branch/main SHA is `1591148eea4320a795de824e77cad0ad78d83666`.**
 
 **Complete acceptance clauses (verbatim):**
 

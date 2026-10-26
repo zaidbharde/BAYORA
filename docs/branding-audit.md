@@ -53,3 +53,10 @@ Immediately before the first push, GitHub showed `zaidbharde/BAYORA` still on `m
 The owner-authorized GitHub branch `bayora/branding-cleanup` was created without overwriting existing history and verified at `d63bf45381c01626366dde89204fdbc2a412262d`. GitHub Actions run `40393471040` passed all configured checks on that SHA. The repository description now reads: “BAYORA is a synthetic-only AI security testing workbench with bounded server-side fixtures; protected upstream data remains blocked pending identity and access controls.” The verified topics are `ai-security`, `express`, `observability`, `react`, `security-testing`, `sqlite`, and `synthetic-testing`. No homepage was set and the repository remains without a license declaration. These metadata changes were confirmed through GitHub's API.
 
 At this update, GitHub `main` and Manus canonical `origin/main` had not yet been advanced from the reviewed base. The source branch's documentation/status follow-up, its CI run, and the subsequent fast-forward/checkpoint result remain to be recorded after confirmation.
+
+
+## Final promotion update — 2026-10-27
+
+After the previous snapshot, GitHub `main` was fast-forwarded from `642dd5f705b4a03d542bbedc6d7562f99fe8f95b` to the same verified source/docs commit as `bayora/branding-cleanup`: `1591148eea4320a795de824e77cad0ad78d83666`. GitHub `main` CI run `40394483081` passed on that SHA. Manus canonical `origin/main` was also fetched, confirmed to be at the reviewed base, and advanced normally (no force) to `1591148eea4320a795de824e77cad0ad78d83666`. Repository description and topics are set as stated above. The final release report is in `docs/release-report.md`.
+
+`publishing.auto_publish` was confirmed `false`, so no public deployment was triggered. The canonical Git push succeeded, but a separate Version History/checkpoint card was not exposed in the registered tool results; a saved platform checkpoint is therefore not independently asserted here.
